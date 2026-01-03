@@ -30,33 +30,37 @@
 }
 
 .status-active {
-  background: #d1fae5;
-  color: #065f46;
+  background: linear-gradient(135deg, #A7F3D0 0%, #86EFAC 100%);
+  color: var(--success-text);
+  box-shadow: 0 2px 8px rgba(110, 231, 183, 0.2);
 }
 
 .status-idle {
-  background: var(--bg-tertiary);
-  color: var(--text-secondary);
+  background: linear-gradient(135deg, #E0E7FF 0%, #DDD6FE 100%);
+  color: var(--primary-text);
+  box-shadow: 0 2px 8px rgba(167, 139, 250, 0.2);
 }
 
 .badge-completed {
-  background: #d1fae5;
-  color: #065f46;
+  background: linear-gradient(135deg, #A7F3D0 0%, #86EFAC 100%);
+  color: var(--success-text);
   padding: var(--spacing-xs) var(--spacing-sm);
   border-radius: var(--radius-sm);
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
+  box-shadow: 0 1px 3px rgba(110, 231, 183, 0.2);
 }
 
 .badge-failed {
-  background: #fee2e2;
-  color: #991b1b;
+  background: linear-gradient(135deg, #FCA5A5 0%, #FEE2E2 100%);
+  color: var(--error-text);
   padding: var(--spacing-xs) var(--spacing-sm);
   border-radius: var(--radius-sm);
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
+  box-shadow: 0 1px 3px rgba(252, 165, 165, 0.2);
 }
 
 /* Estado actual */
@@ -102,17 +106,20 @@
 
 .progress-fill {
   height: 100%;
-  background: var(--success);
+  background: linear-gradient(90deg, var(--success-dark) 0%, var(--success) 100%);
   transition: width 0.3s ease;
   border-radius: var(--radius-full);
+  box-shadow: 0 0 8px rgba(110, 231, 183, 0.3);
 }
 
 .progress-fill.primary {
-  background: var(--primary);
+  background: linear-gradient(90deg, var(--primary-dark) 0%, var(--primary) 100%);
+  box-shadow: 0 0 8px rgba(167, 139, 250, 0.3);
 }
 
 .progress-fill.secondary {
-  background: var(--secondary);
+  background: linear-gradient(90deg, var(--secondary-dark) 0%, var(--secondary) 100%);
+  box-shadow: 0 0 8px rgba(252, 211, 77, 0.3);
 }
 
 /* Progreso circular */
@@ -178,7 +185,7 @@
 .estimation-value {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--primary);
+  color: var(--primary-text);
   margin-bottom: var(--spacing-xs);
 }
 
@@ -199,18 +206,21 @@
 }
 
 .confidence-high {
-  background: #d1fae5;
-  color: #065f46;
+  background: linear-gradient(135deg, #A7F3D0 0%, #86EFAC 100%);
+  color: var(--success-text);
+  box-shadow: 0 1px 3px rgba(110, 231, 183, 0.2);
 }
 
 .confidence-medium {
-  background: #fef3c7;
-  color: #92400e;
+  background: linear-gradient(135deg, #FEF9C3 0%, #FCD34D 100%);
+  color: var(--warning-text);
+  box-shadow: 0 1px 3px rgba(252, 211, 77, 0.2);
 }
 
 .confidence-low {
-  background: #fee2e2;
-  color: #991b1b;
+  background: linear-gradient(135deg, #FCA5A5 0%, #FEE2E2 100%);
+  color: var(--error-text);
+  box-shadow: 0 1px 3px rgba(252, 165, 165, 0.2);
 }
 
 .estimation-disclaimer {
@@ -264,13 +274,21 @@
 }
 
 .item-pocillos {
-  color: var(--primary);
+  color: var(--primary-text);
   font-weight: 600;
+  background: linear-gradient(135deg, #E0E7FF 0%, #DDD6FE 100%);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  display: inline-block;
 }
 
 .item-charolas {
-  color: var(--secondary);
+  color: var(--warning-text);
   font-weight: 600;
+  background: linear-gradient(135deg, #FEF9C3 0%, #FDE68A 100%);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  display: inline-block;
 }
 
 /* Problemas */
@@ -337,7 +355,7 @@
 }
 
 .time-elapsed {
-  color: var(--primary);
+  color: var(--primary-text);
   font-weight: 600;
 }
 
@@ -354,19 +372,22 @@
 }
 
 .alert-error {
-  background: #fee2e2;
-  color: #991b1b;
-  border: 1px solid #fca5a5;
+  background: linear-gradient(135deg, #FEE2E2 0%, #FCA5A5 20%);
+  color: var(--error-text);
+  border: 1px solid var(--error);
+  box-shadow: 0 2px 8px rgba(252, 165, 165, 0.2);
 }
 
 .alert-success {
-  background: #d1fae5;
-  color: #065f46;
-  border: 1px solid #6ee7b7;
+  background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 20%);
+  color: var(--success-text);
+  border: 1px solid var(--success-dark);
+  box-shadow: 0 2px 8px rgba(110, 231, 183, 0.2);
 }
 
 .alert-info {
-  background: #dbeafe;
-  color: #1e40af;
-  border: 1px solid #93c5fd;
+  background: linear-gradient(135deg, #E0E7FF 0%, #C7D2FE 20%);
+  color: var(--primary-text);
+  border: 1px solid var(--primary);
+  box-shadow: 0 2px 8px rgba(167, 139, 250, 0.2);
 }

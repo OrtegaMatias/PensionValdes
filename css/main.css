@@ -1,14 +1,23 @@
 /* Variables CSS */
 :root {
-  /* Colores primarios */
-  --primary: #2563eb;
-  --secondary: #f59e0b;
+  /* Colores primarios - Paleta pastel */
+  --primary: #C7D2FE;
+  --primary-dark: #A5B4FC;
+  --primary-text: #312E81;
+  --secondary: #FCD34D;
+  --secondary-dark: #FBBF24;
 
-  /* Estados */
-  --success: #10b981;
-  --error: #ef4444;
-  --warning: #f59e0b;
-  --idle: #6b7280;
+  /* Estados - Paleta pastel */
+  --success: #86EFAC;
+  --success-dark: #6EE7B7;
+  --success-text: #065F46;
+  --error: #FCA5A5;
+  --error-dark: #F87171;
+  --error-text: #991B1B;
+  --warning: #FCD34D;
+  --warning-text: #CA8A04;
+  --idle: #CBD5E1;
+  --idle-text: #475569;
 
   /* Neutrales */
   --bg-primary: #ffffff;
@@ -95,8 +104,8 @@ body {
 }
 
 .btn-refresh {
-  background: var(--primary);
-  color: white;
+  background: linear-gradient(135deg, #C7D2FE 0%, #A5B4FC 100%);
+  color: var(--primary-text);
   border: none;
   width: 48px;
   height: 48px;
@@ -106,12 +115,12 @@ body {
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 2px 8px rgba(167, 139, 250, 0.2);
 }
 
 .btn-refresh:hover {
-  background: #1d4ed8;
-  box-shadow: var(--shadow-md);
+  background: linear-gradient(135deg, #A5B4FC 0%, #C7D2FE 100%);
+  box-shadow: 0 4px 12px rgba(167, 139, 250, 0.3);
   transform: translateY(-1px);
 }
 
