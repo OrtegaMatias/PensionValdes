@@ -4,8 +4,8 @@
 class Calculator {
   constructor(data) {
     this.data = data;
-    // Usar horas configuradas en meta, o default 20h
-    this.workHoursPerDay = data.meta.workHoursPerDay || 20;
+    // Usar horas configuradas en meta, o default 18h
+    this.workHoursPerDay = data.meta.workHoursPerDay || 18;
   }
 
   /**
@@ -14,7 +14,7 @@ class Calculator {
    */
   updateData(data) {
     this.data = data;
-    this.workHoursPerDay = data.meta.workHoursPerDay || 20;
+    this.workHoursPerDay = data.meta.workHoursPerDay || 18;
   }
 
   /**
@@ -55,29 +55,30 @@ class Calculator {
   }
 
   /**
-   * Calcular promedio de duración por tipo de ítem
+   * Calcular promedio de duración por tipo de ítem (por pieza individual)
    * @param {string} itemType - 'pocillos' o 'charolas'
-   * @returns {number|null} Promedio en minutos, o null si no hay datos
+   * @returns {number|null} Promedio en minutos por pieza, o null si no hay datos
    */
   getAverageDuration(itemType) {
     const completed = this.data.history.filter(
-      h => h.item === itemType && (h.status === 'completed' || h.status === 'partial') && h.duration > 0
+      h => h.item === itemType && (h.status === 'completed' || h.status === 'partial') && h.duration > 0 && h.batchSize > 0
     );
 
     if (completed.length === 0) return null;
 
-    const total = completed.reduce((sum, h) => sum + h.duration, 0);
-    return Math.round(total / completed.length);
+    // Calcular tiempo promedio por pieza (duration / batchSize para cada lote)
+    const totalPiecesTime = completed.reduce((sum, h) => sum + (h.duration / h.batchSize), 0);
+    return Math.round(totalPiecesTime / completed.length);
   }
 
   /**
-   * Calcular promedio ponderado (más peso a impresiones recientes)
+   * Calcular promedio ponderado (más peso a impresiones recientes, por pieza)
    * @param {string} itemType - 'pocillos' o 'charolas'
-   * @returns {number|null} Promedio ponderado en minutos
+   * @returns {number|null} Promedio ponderado en minutos por pieza
    */
   getWeightedAverage(itemType) {
     const completed = this.data.history
-      .filter(h => h.item === itemType && (h.status === 'completed' || h.status === 'partial') && h.duration > 0)
+      .filter(h => h.item === itemType && (h.status === 'completed' || h.status === 'partial') && h.duration > 0 && h.batchSize > 0)
       .reverse(); // Más recientes primero
 
     if (completed.length === 0) return null;
@@ -87,7 +88,8 @@ class Calculator {
 
     completed.forEach((h, index) => {
       const weight = 1 / (index + 1); // Peso decreciente
-      weightedSum += h.duration * weight;
+      const timePerPiece = h.duration / h.batchSize; // Calcular tiempo por pieza
+      weightedSum += timePerPiece * weight;
       weightSum += weight;
     });
 
@@ -101,9 +103,9 @@ class Calculator {
   getRemainingTime() {
     const progress = this.getProgress();
 
-    // Usar promedio ponderado, o fallback a valores estimados
-    const avgPocillo = this.getWeightedAverage('pocillos') || 180; // 3 horas default
-    const avgCharola = this.getWeightedAverage('charolas') || 420; // 7 horas default
+    // Usar promedio ponderado por pieza, o fallback a valores estimados por pieza
+    const avgPocillo = this.getWeightedAverage('pocillos') || 71; // ~71 min/pieza default (basado en lote de 9 en 640min)
+    const avgCharola = this.getWeightedAverage('charolas') || 420; // ~7 horas/charola default
 
     const pocillosRestantes = Math.max(0, this.data.meta.goals.pocillos - progress.pocillos);
     const charolasRestantes = Math.max(0, this.data.meta.goals.charolas - progress.charolas);
