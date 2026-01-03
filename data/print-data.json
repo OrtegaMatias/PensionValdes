@@ -24,8 +24,8 @@
       "batchSize": 9,
       "duration": 640,
       "status": "pending",
-      "goodCount": 0,
-      "notes": ""
+      "goodCount": 8,
+      "notes": "Fallo una pieza"
     }
   ],
   "issues": []
