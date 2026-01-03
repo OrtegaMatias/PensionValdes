@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Dashboard de monitoreo de impresión 3D - Proyecto Pensión Valdés">
+  <title>Dashboard Impresión 3D | Pensión Valdés</title>
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/responsive.css">
+
+  <!-- Chart.js desde CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-content">
+        <h1>Dashboard de Impresión 3D</h1>
+        <p class="subtitle">Proyecto Pensión Valdés</p>
+      </div>
+      <button id="btn-refresh" class="btn-refresh" title="Actualizar datos">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+        </svg>
+      </button>
+    </header>
+
+    <!-- Estado actual -->
+    <section class="section-current-status">
+      <div class="card">
+        <h2 class="section-title">Estado Actual</h2>
+        <div id="current-status-container">
+          <!-- Renderizado dinámicamente por renderer.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Progreso general -->
+    <section class="section-progress">
+      <h2 class="section-title">Progreso General</h2>
+      <div class="grid-2">
+        <div class="card progress-card" id="progress-pocillos">
+          <!-- Renderizado dinámicamente -->
+        </div>
+        <div class="card progress-card" id="progress-charolas">
+          <!-- Renderizado dinámicamente -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Estimación -->
+    <section class="section-estimation">
+      <div class="card">
+        <h2 class="section-title">Estimación de Término</h2>
+        <div id="estimation-container">
+          <!-- Renderizado dinámicamente -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Gráficas -->
+    <section class="section-charts">
+      <h2 class="section-title">Análisis Visual</h2>
+      <div class="charts-grid">
+        <div class="card chart-card">
+          <h3>Progreso Acumulado</h3>
+          <canvas id="chart-cumulative"></canvas>
+        </div>
+        <div class="card chart-card">
+          <h3>Duración por Lote</h3>
+          <canvas id="chart-duration"></canvas>
+        </div>
+        <div class="card chart-card">
+          <h3>Tasa de Éxito</h3>
+          <canvas id="chart-success-rate"></canvas>
+        </div>
+        <div class="card chart-card">
+          <h3>Proyección de Progreso</h3>
+          <canvas id="chart-projection"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- Historial -->
+    <section class="section-history">
+      <div class="card">
+        <div class="section-header">
+          <h2 class="section-title">Historial de Impresiones</h2>
+          <button id="btn-show-all-history" class="btn-secondary">
+            Ver todo
+          </button>
+        </div>
+        <div id="history-container">
+          <!-- Renderizado dinámicamente -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Problemas -->
+    <section class="section-issues">
+      <div class="card">
+        <h2 class="section-title">Registro de Problemas</h2>
+        <div id="issues-container">
+          <!-- Renderizado dinámicamente -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>Última actualización: <span id="last-update">--</span></p>
+      <p>Proyecto iniciado: <span id="project-start-date">--</span></p>
+    </footer>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/dataLoader.js"></script>
+  <script src="js/calculator.js"></script>
+  <script src="js/renderer.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

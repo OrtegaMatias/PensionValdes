@@ -1,0 +1,246 @@
+/* Responsive design - Mobile first approach */
+
+/* Tablet y móviles grandes (max-width: 768px) */
+@media (max-width: 768px) {
+  .container {
+    padding: var(--spacing-md);
+  }
+
+  /* Header */
+  .header {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-lg);
+  }
+
+  .header-content h1 {
+    font-size: 1.5rem;
+  }
+
+  .subtitle {
+    font-size: 0.875rem;
+  }
+
+  .btn-refresh {
+    width: 44px;
+    height: 44px;
+  }
+
+  /* Grids a una columna */
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Secciones */
+  .section-title {
+    font-size: 1.25rem;
+  }
+
+  section {
+    margin-bottom: var(--spacing-xl);
+  }
+
+  /* Cards */
+  .card {
+    padding: var(--spacing-lg);
+  }
+
+  /* Progreso circular más pequeño en móvil */
+  .circular-progress-container {
+    width: 140px;
+    height: 140px;
+  }
+
+  .progress-number {
+    font-size: 1.5rem;
+  }
+
+  .progress-count {
+    font-size: 1.25rem;
+  }
+
+  /* Estimación */
+  .estimation-content {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+
+  .estimation-value {
+    font-size: 1.5rem;
+  }
+
+  /* Historial - tabla responsive */
+  .history-table {
+    font-size: 0.875rem;
+  }
+
+  .history-table th,
+  .history-table td {
+    padding: var(--spacing-sm);
+  }
+
+  /* Ocultar algunas columnas en móvil */
+  .history-table th:nth-child(5),
+  .history-table td:nth-child(5) {
+    display: none;
+  }
+
+  /* Section header en columna */
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+  }
+
+  /* Botones más pequeños */
+  .btn-secondary {
+    width: 100%;
+    padding: var(--spacing-md);
+  }
+
+  /* Issues */
+  .issue-item {
+    padding: var(--spacing-md);
+  }
+
+  .issue-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-xs);
+  }
+
+  /* Time info */
+  .time-info {
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
+}
+
+/* Móviles pequeños (max-width: 480px) */
+@media (max-width: 480px) {
+  .container {
+    padding: var(--spacing-sm);
+  }
+
+  .header {
+    padding: var(--spacing-md);
+  }
+
+  .header-content h1 {
+    font-size: 1.25rem;
+  }
+
+  .card {
+    padding: var(--spacing-md);
+  }
+
+  /* Progreso circular aún más pequeño */
+  .circular-progress-container {
+    width: 120px;
+    height: 120px;
+  }
+
+  .progress-number {
+    font-size: 1.25rem;
+  }
+
+  .progress-label {
+    font-size: 0.75rem;
+  }
+
+  .progress-count {
+    font-size: 1rem;
+  }
+
+  .progress-goal {
+    font-size: 0.875rem;
+  }
+
+  /* Estimación */
+  .estimation-value {
+    font-size: 1.25rem;
+  }
+
+  .estimation-label {
+    font-size: 0.75rem;
+  }
+
+  /* Historial - versión muy compacta */
+  .history-table {
+    font-size: 0.75rem;
+  }
+
+  .history-table th,
+  .history-table td {
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+
+  /* Ocultar más columnas en móviles pequeños */
+  .history-table th:nth-child(3),
+  .history-table td:nth-child(3),
+  .history-table th:nth-child(4),
+  .history-table td:nth-child(4) {
+    display: none;
+  }
+
+  /* Chart cards */
+  .chart-card h3 {
+    font-size: 1rem;
+  }
+
+  /* Footer */
+  .footer {
+    font-size: 0.75rem;
+    padding: var(--spacing-lg) 0;
+  }
+}
+
+/* Landscape móviles */
+@media (max-width: 768px) and (orientation: landscape) {
+  .circular-progress-container {
+    width: 100px;
+    height: 100px;
+  }
+
+  .header {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: var(--spacing-md);
+  }
+
+  .grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Print styles */
+@media print {
+  .header {
+    box-shadow: none;
+    border: 1px solid var(--border);
+  }
+
+  .btn-refresh,
+  .btn-secondary {
+    display: none;
+  }
+
+  .card {
+    box-shadow: none;
+    border: 1px solid var(--border);
+    page-break-inside: avoid;
+  }
+
+  .charts-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @page {
+    margin: 2cm;
+  }
+}

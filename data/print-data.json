@@ -1,0 +1,38 @@
+{
+  "meta": {
+    "projectName": "Proyecto Pensión Valdés",
+    "goals": {
+      "pocillos": 100,
+      "charolas": 20
+    },
+    "startDate": "2026-01-03"
+  },
+  "currentPrint": {
+    "isActive": false,
+    "item": "",
+    "batchSize": 0,
+    "startTime": "",
+    "estimatedDuration": 0
+  },
+  "history": [
+    {
+      "id": 1,
+      "date": "2026-01-03",
+      "item": "pocillos",
+      "batchSize": 4,
+      "duration": 180,
+      "status": "completed",
+      "notes": "Primera impresión exitosa"
+    },
+    {
+      "id": 2,
+      "date": "2026-01-03",
+      "item": "pocillos",
+      "batchSize": 4,
+      "duration": 175,
+      "status": "completed",
+      "notes": ""
+    }
+  ],
+  "issues": []
+}
