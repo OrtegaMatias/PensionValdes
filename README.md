@@ -25,9 +25,44 @@ Una vez desplegado en GitHub Pages, el dashboard estará disponible en:
 https://[tu-usuario].github.io/PensionValdes/
 ```
 
-## Actualizar el Dashboard
+## Actualizar el Dashboard - Método Fácil (Recomendado)
 
-El dashboard se actualiza editando el archivo `data/print-data.json` y subiéndolo a GitHub. A continuación se explican los casos de uso más comunes:
+**¡Actualiza el dashboard con solo 1 click!** Usa el editor local que guarda automáticamente y sube los cambios a GitHub.
+
+### Opción 1: Editor Local con Auto-Push
+
+1. **Inicia el servidor del editor:**
+   ```bash
+   npm start
+   # o
+   node server.js
+   ```
+
+2. **El editor se abrirá automáticamente en tu navegador** en `http://localhost:3000`
+
+3. **Haz tus cambios:**
+   - Inicia una nueva impresión
+   - Completa una impresión
+   - Registra un fallo
+
+4. **Click en "💾 Guardar y Subir a GitHub"**
+   - El archivo se guarda automáticamente
+   - Se hace commit y push a GitHub
+   - ¡Listo! El dashboard se actualizará en 1-2 minutos
+
+### Opción 2: Editor Web (desde GitHub Pages)
+
+Si no tienes acceso al servidor local, puedes usar el editor web:
+
+1. Visita: `https://[tu-usuario].github.io/PensionValdes/editor.html`
+2. Haz tus cambios
+3. Descarga el archivo `print-data.json`
+4. Reemplaza `data/print-data.json` con el archivo descargado
+5. Ejecuta: `git add data/print-data.json && git commit -m "Actualizar" && git push`
+
+## Actualizar el Dashboard - Método Manual
+
+Si prefieres editar el JSON directamente:
 
 ### 1. Iniciar una nueva impresión
 

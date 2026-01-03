@@ -1,0 +1,17 @@
+{
+  "name": "pension-valdes-dashboard",
+  "version": "1.0.0",
+  "description": "Dashboard de monitoreo para proyecto de impresión 3D - 100 pocillos y 20 charolas",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "edit": "node server.js"
+  },
+  "keywords": [
+    "3d-printing",
+    "dashboard",
+    "monitoring"
+  ],
+  "author": "",
+  "license": "MIT"
+}
