@@ -25,6 +25,8 @@ const mimeTypes = {
 };
 
 const server = http.createServer((req, res) => {
+  console.log(`${req.method} ${req.url}`);
+
   // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -85,10 +87,13 @@ const server = http.createServer((req, res) => {
   }
 
   // Servir archivos estáticos
-  let filePath = '.' + req.url;
-  if (filePath === './') {
-    filePath = './editor-local.html';
+  let requestPath = req.url.split('?')[0]; // Remover query params
+  if (requestPath === '/') {
+    requestPath = '/editor-local.html';
   }
+
+  // Usar ruta absoluta basada en __dirname
+  const filePath = path.join(__dirname, requestPath);
 
   const extname = String(path.extname(filePath)).toLowerCase();
   const contentType = mimeTypes[extname] || 'application/octet-stream';
@@ -96,9 +101,11 @@ const server = http.createServer((req, res) => {
   fs.readFile(filePath, (error, content) => {
     if (error) {
       if (error.code === 'ENOENT') {
+        console.log(`❌ Archivo no encontrado: ${filePath}`);
         res.writeHead(404);
-        res.end('Archivo no encontrado');
+        res.end('Archivo no encontrado: ' + requestPath);
       } else {
+        console.error(`❌ Error leyendo archivo ${filePath}:`, error);
         res.writeHead(500);
         res.end('Error del servidor: ' + error.code);
       }
