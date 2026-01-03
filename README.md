@@ -41,9 +41,9 @@ https://[tu-usuario].github.io/PensionValdes/
 2. **El editor se abrirá automáticamente en tu navegador** en `http://localhost:3000`
 
 3. **Haz tus cambios:**
-   - Inicia una nueva impresión
-   - Completa una impresión
-   - Registra un fallo
+   - Registra una impresión (queda en pendiente)
+   - Clasifica el estado en la tabla (exitosa, parcial, fallida, pendiente)
+   - Edita o elimina entradas si necesitas
 
 4. **Click en "💾 Guardar y Subir a GitHub"**
    - El archivo se guarda automáticamente
@@ -55,7 +55,7 @@ https://[tu-usuario].github.io/PensionValdes/
 Si no tienes acceso al servidor local, puedes usar el editor web:
 
 1. Visita: `https://[tu-usuario].github.io/PensionValdes/editor.html`
-2. Haz tus cambios
+2. Haz tus cambios (estado actual, configuración y registros)
 3. Descarga el archivo `print-data.json`
 4. Reemplaza `data/print-data.json` con el archivo descargado
 5. Ejecuta: `git add data/print-data.json && git commit -m "Actualizar" && git push`
@@ -87,9 +87,9 @@ Edita `data/print-data.json` y modifica la sección `currentPrint`:
 - `startTime`: fecha y hora de inicio en formato ISO `"YYYY-MM-DDTHH:MM:SS"`
 - `estimatedDuration`: tiempo estimado en minutos (ej: 180 = 3 horas)
 
-### 2. Completar una impresión
+### 2. Registrar una impresión en el historial
 
-Cuando una impresión termine exitosamente:
+Cuando una impresión termine (o quieras registrarla):
 
 **Paso 1:** Agregar al historial
 
@@ -104,7 +104,7 @@ Encuentra la sección `history` y agrega una nueva entrada:
       "item": "pocillos",
       "batchSize": 4,
       "duration": 185,
-      "status": "completed",
+      "status": "pending",
       "notes": ""
     }
   ]
@@ -117,7 +117,7 @@ Encuentra la sección `history` y agrega una nueva entrada:
 - `item`: `"pocillos"` o `"charolas"`
 - `batchSize`: cantidad impresa
 - `duration`: duración real en minutos
-- `status`: `"completed"` para exitosa
+- `status`: `"pending"`, `"completed"`, `"partial"` o `"failed"`
 - `notes`: notas opcionales (ej: "Primera impresión exitosa")
 
 **Paso 2:** Desactivar currentPrint
@@ -134,9 +134,9 @@ Encuentra la sección `history` y agrega una nueva entrada:
 }
 ```
 
-### 3. Registrar una impresión fallida
+### 3. Registrar una impresión fallida (opcional)
 
-Cuando una impresión falle:
+Si una impresión falla:
 
 **Paso 1:** Agregar al historial con `status: "failed"`
 
@@ -298,10 +298,14 @@ Si el JSON tiene errores de sintaxis, el dashboard mostrará un mensaje de error
 
 ### ¿Cómo cambio las horas de trabajo por día?
 
-Actualmente está configurado para 8 horas por día. Para cambiar esto, edita `js/calculator.js` línea 5:
+Puedes configurarlo en `data/print-data.json` (o desde el editor, sección "Configuración del Proyecto"):
 
-```javascript
-this.workHoursPerDay = 8; // Cambia este valor
+```json
+{
+  "meta": {
+    "workHoursPerDay": 18
+  }
+}
 ```
 
 ### ¿Puedo agregar más metas?

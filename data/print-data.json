@@ -7,7 +7,7 @@
     },
     "startDate": "2026-01-02",
     "targetEndDate": "2026-01-20",
-    "workHoursPerDay": 20
+    "workHoursPerDay": 18
   },
   "currentPrint": {
     "isActive": true,

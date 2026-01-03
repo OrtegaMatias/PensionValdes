@@ -9,9 +9,55 @@
   <link rel="stylesheet" href="css/responsive.css">
   <style>
     .editor-container {
-      max-width: 900px;
+      max-width: 1200px;
       margin: 0 auto;
-      padding: var(--spacing-lg);
+      padding: var(--spacing-xl);
+    }
+
+    .editor-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+      gap: var(--spacing-2xl);
+      align-items: start;
+    }
+
+    .editor-column {
+      display: grid;
+      gap: var(--spacing-xl);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .editor-column section {
+      margin-bottom: 0;
+    }
+
+    .section-header .section-title {
+      margin-bottom: 0;
+    }
+
+    .step-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-full);
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      font-weight: 700;
+      font-size: 0.875rem;
+    }
+
+    .helper-text {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: var(--spacing-xs);
     }
 
     .form-group {
@@ -96,6 +142,13 @@
       border-top: 2px solid var(--border);
     }
 
+    .table-scroll {
+      overflow-x: auto;
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+    }
+
     .current-status-box {
       background: var(--bg-secondary);
       padding: var(--spacing-lg);
@@ -119,22 +172,34 @@
       background: var(--idle);
     }
 
-    .download-section {
-      background: linear-gradient(135deg, var(--primary) 0%, #1d4ed8 100%);
-      color: white;
-      padding: var(--spacing-xl);
+    .save-panel {
+      position: sticky;
+      top: var(--spacing-lg);
+      border: 1px solid var(--border);
       border-radius: var(--radius-lg);
-      text-align: center;
-      margin-top: var(--spacing-2xl);
+      padding: var(--spacing-xl);
+      background: var(--bg-primary);
+      box-shadow: var(--shadow-sm);
     }
 
-    .download-section h2 {
-      margin-bottom: var(--spacing-md);
+    .save-panel h2 {
+      margin-bottom: var(--spacing-sm);
     }
 
-    .download-section p {
+    .save-panel p {
       margin-bottom: var(--spacing-lg);
-      opacity: 0.9;
+      color: var(--text-secondary);
+    }
+
+    .save-status a {
+      color: var(--primary);
+      text-decoration: underline;
+    }
+
+    .save-status {
+      margin-top: var(--spacing-lg);
+      font-size: 0.875rem;
+      color: var(--text-secondary);
     }
 
     .code-block {
@@ -155,6 +220,11 @@
       width: 100%;
       border-collapse: collapse;
       margin-top: var(--spacing-md);
+    }
+
+    .table-scroll .history-table {
+      margin-top: 0;
+      min-width: 720px;
     }
 
     .history-table th {
@@ -217,22 +287,103 @@
       font-weight: 600;
     }
 
-    .edit-row {
-      background: #fef3c7 !important;
+    .row-pending {
+      background: #fef3c7;
     }
 
-    .edit-row input,
-    .edit-row select,
-    .edit-row textarea {
-      padding: var(--spacing-xs);
-      font-size: 0.875rem;
-      width: 100%;
+    .history-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-md);
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .legend-dot.status-completed {
+      background: var(--success);
+    }
+
+    .legend-dot.status-partial {
+      background: #f59e0b;
+    }
+
+    .legend-dot.status-failed {
+      background: var(--error);
+    }
+
+    .legend-dot.status-pending {
+      background: var(--warning);
+    }
+
+    .rating-panel {
+      margin-top: var(--spacing-lg);
       border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
+      background: var(--bg-primary);
+      box-shadow: var(--shadow-sm);
     }
 
-    .edit-row textarea {
-      min-height: 40px;
+    .rating-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .panel-section {
+      border-top: 1px solid var(--border);
+      padding-top: var(--spacing-md);
+      margin-top: var(--spacing-md);
+    }
+
+    .panel-title {
+      font-weight: 600;
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .rating-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: var(--spacing-md);
+    }
+
+    @media (max-width: 960px) {
+      .editor-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .save-panel {
+        position: static;
+      }
+
+      .rating-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
     }
 
     .no-history {
@@ -254,166 +405,216 @@
       </a>
     </header>
 
-    <!-- Configuración del Proyecto -->
-    <section class="card">
-      <h2 class="section-title">Configuración del Proyecto</h2>
-      <form id="form-project-config">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="project-name">Nombre del proyecto</label>
-            <input type="text" id="project-name" required>
+    <div class="editor-layout">
+      <div class="editor-column">
+        <!-- Configuración del Proyecto -->
+        <section class="card">
+          <div class="section-header">
+            <span class="step-pill">1</span>
+            <h2 class="section-title">Configuración del Proyecto</h2>
           </div>
-        </div>
+          <form id="form-project-config">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="project-name">Nombre del proyecto</label>
+                <input type="text" id="project-name" required>
+              </div>
+            </div>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label for="start-date-project">Fecha de inicio real</label>
-            <input type="date" id="start-date-project" required>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="start-date-project">Fecha de inicio real</label>
+                <input type="date" id="start-date-project" required>
+              </div>
+
+              <div class="form-group">
+                <label for="target-end-date">Fecha de término pactada</label>
+                <input type="date" id="target-end-date" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="goal-pocillos">Meta de pocillos</label>
+                <input type="number" id="goal-pocillos" min="1" required>
+              </div>
+
+              <div class="form-group">
+                <label for="goal-charolas">Meta de charolas</label>
+                <input type="number" id="goal-charolas" min="1" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="work-hours">Horas de trabajo por día</label>
+                <input type="number" id="work-hours" min="1" max="24" required placeholder="18">
+              </div>
+            </div>
+
+            <button type="submit" class="btn-primary">Actualizar Configuración</button>
+          </form>
+        </section>
+
+        <!-- Estado Actual -->
+        <section class="card">
+          <div class="section-header">
+            <span class="step-pill">2</span>
+            <h2 class="section-title">Estado Actual</h2>
+          </div>
+          <div class="current-status-box" id="current-status-display">
+            <!-- Actualizado dinámicamente -->
           </div>
 
-          <div class="form-group">
-            <label for="target-end-date">Fecha de término pactada</label>
-            <input type="date" id="target-end-date" required>
-          </div>
-        </div>
+          <form id="form-current-print">
+            <div class="form-group">
+              <label>
+                <input type="checkbox" id="is-active">
+                Hay una impresión en curso
+              </label>
+            </div>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label for="goal-pocillos">Meta de pocillos</label>
-            <input type="number" id="goal-pocillos" min="1" required>
-          </div>
+            <div id="print-details" class="hidden">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="item-type">Tipo de ítem</label>
+                  <select id="item-type">
+                    <option value="">Seleccionar...</option>
+                    <option value="pocillos">Pocillos</option>
+                    <option value="charolas">Charolas</option>
+                  </select>
+                </div>
 
-          <div class="form-group">
-            <label for="goal-charolas">Meta de charolas</label>
-            <input type="number" id="goal-charolas" min="1" required>
-          </div>
-        </div>
+                <div class="form-group">
+                  <label for="batch-size">Tamaño del lote</label>
+                  <input type="number" id="batch-size" min="1" placeholder="4">
+                </div>
+              </div>
 
-        <button type="submit" class="btn-primary">Actualizar Configuración</button>
-      </form>
-    </section>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="start-time">Fecha y hora de inicio</label>
+                  <input type="datetime-local" id="start-time">
+                </div>
 
-    <hr class="section-divider">
+                <div class="form-group">
+                  <label for="estimated-duration">Duración estimada (minutos)</label>
+                  <input type="number" id="estimated-duration" min="1" placeholder="180">
+                </div>
+              </div>
+            </div>
 
-    <!-- Estado Actual -->
-    <section class="card">
-      <h2 class="section-title">Estado Actual</h2>
-      <div class="current-status-box" id="current-status-display">
-        <!-- Actualizado dinámicamente -->
+            <button type="submit" class="btn-primary">Actualizar Estado Actual</button>
+          </form>
+        </section>
       </div>
 
-      <form id="form-current-print">
-        <div class="form-group">
-          <label>
-            <input type="checkbox" id="is-active">
-            Hay una impresión en curso
-          </label>
-        </div>
-
-        <div id="print-details" class="hidden">
-          <div class="form-row">
-            <div class="form-group">
-              <label for="item-type">Tipo de ítem</label>
-              <select id="item-type">
-                <option value="">Seleccionar...</option>
-                <option value="pocillos">Pocillos</option>
-                <option value="charolas">Charolas</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="batch-size">Tamaño del lote</label>
-              <input type="number" id="batch-size" min="1" placeholder="4">
+      <div class="editor-column">
+        <!-- Visualizador de Impresiones -->
+        <section class="card">
+          <div class="section-header">
+            <span class="step-pill">3</span>
+            <h2 class="section-title">Impresiones Registradas</h2>
+          </div>
+          <p class="text-muted" style="margin-bottom: var(--spacing-lg);">
+            Califica cada impresión y registra cuántas piezas salieron bien.
+          </p>
+          <div class="history-toolbar">
+            <button type="button" class="btn-secondary" onclick="addHistoryItem()">+ Agregar impresión</button>
+            <div class="legend">
+              <span class="legend-item"><span class="legend-dot status-completed"></span>Exitosa</span>
+              <span class="legend-item"><span class="legend-dot status-partial"></span>Parcial</span>
+              <span class="legend-item"><span class="legend-dot status-failed"></span>Fallida</span>
+              <span class="legend-item"><span class="legend-dot status-pending"></span>Pendiente</span>
             </div>
           </div>
 
-          <div class="form-row">
-            <div class="form-group">
-              <label for="start-time">Fecha y hora de inicio</label>
-              <input type="datetime-local" id="start-time">
+          <div id="history-management">
+            <!-- Renderizado dinámicamente -->
+          </div>
+
+          <div id="rating-panel" class="rating-panel hidden">
+            <div class="rating-header">
+              <div>
+                <h3>Calificar impresión <span id="rating-id"></span></h3>
+                <div class="helper-text" id="rating-meta"></div>
+              </div>
+              <button type="button" class="btn-secondary" onclick="closeRatingPanel()">Cerrar</button>
             </div>
 
-            <div class="form-group">
-              <label for="estimated-duration">Duración estimada (minutos)</label>
-              <input type="number" id="estimated-duration" min="1" placeholder="180">
-            </div>
+            <form id="form-rate">
+              <div class="panel-section">
+                <div class="panel-title">Datos de impresión</div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="rate-date">Fecha</label>
+                    <input type="date" id="rate-date" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="rate-item">Tipo de ítem</label>
+                    <select id="rate-item" required>
+                      <option value="pocillos">Pocillos</option>
+                      <option value="charolas">Charolas</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="rate-batch">Tamaño del lote</label>
+                    <input type="number" id="rate-batch" min="1" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="rate-duration">Duración (minutos)</label>
+                    <input type="number" id="rate-duration" min="0">
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel-section">
+                <div class="panel-title">Calificación</div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="rate-status">Resultado</label>
+                    <select id="rate-status" required>
+                      <option value="pending">⏳ Pendiente</option>
+                      <option value="completed">✓ Exitosa</option>
+                      <option value="partial">⚠️ Parcial</option>
+                      <option value="failed">✗ Fallida</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="rate-good">Piezas buenas</label>
+                    <input type="number" id="rate-good" min="0">
+                    <div class="helper-text" id="rate-good-hint">Rango: 0 - 0</div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="rate-notes">Notas</label>
+                  <textarea id="rate-notes" placeholder="Detalles del resultado"></textarea>
+                </div>
+              </div>
+
+              <div class="rating-actions">
+                <button type="submit" class="btn-primary">Guardar calificación</button>
+              </div>
+            </form>
           </div>
-        </div>
+        </section>
 
-        <button type="submit" class="btn-primary">Actualizar Estado Actual</button>
-      </form>
-    </section>
-
-    <hr class="section-divider">
-
-    <!-- Registrar Impresión -->
-    <section class="card">
-      <h2 class="section-title">Registrar Impresión</h2>
-      <p class="text-muted" style="margin-bottom: var(--spacing-lg);">
-        Registra una impresión realizada. Luego podrás clasificar el resultado en la tabla de historial.
-      </p>
-
-      <form id="form-register-print">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="register-item">Tipo de ítem</label>
-            <select id="register-item" required>
-              <option value="">Seleccionar...</option>
-              <option value="pocillos">Pocillos</option>
-              <option value="charolas">Charolas</option>
-            </select>
+        <!-- Guardar y Publicar -->
+        <section class="card save-panel">
+          <div class="section-header">
+            <span class="step-pill">4</span>
+            <h2 class="section-title">Guardar y Publicar</h2>
           </div>
-
-          <div class="form-group">
-            <label for="register-batch">Tamaño del lote</label>
-            <input type="number" id="register-batch" min="1" required placeholder="4">
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label for="register-date">Fecha</label>
-            <input type="date" id="register-date" required>
-          </div>
-
-          <div class="form-group">
-            <label for="register-duration">Duración (minutos)</label>
-            <input type="number" id="register-duration" min="0" required placeholder="180">
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="register-notes">Notas (opcional)</label>
-          <textarea id="register-notes" placeholder="Observaciones sobre la impresión"></textarea>
-        </div>
-
-        <button type="submit" class="btn-primary">Registrar Impresión</button>
-      </form>
-    </section>
-
-    <hr class="section-divider">
-
-    <!-- Gestionar Historial -->
-    <section class="card">
-      <h2 class="section-title">Gestionar Historial</h2>
-      <p class="text-muted" style="margin-bottom: var(--spacing-lg);">
-        Edita o elimina impresiones del historial
-      </p>
-
-      <div id="history-management">
-        <!-- Renderizado dinámicamente -->
+          <p>Guarda los cambios y actualiza el dashboard en GitHub Pages.</p>
+          <button onclick="saveAndPush()" id="btn-save" class="btn-primary">
+            💾 Guardar y Subir a GitHub
+          </button>
+          <div id="save-status" class="save-status"></div>
+        </section>
       </div>
-    </section>
-
-    <!-- Guardar y Publicar -->
-    <section class="download-section">
-      <h2>3. Guardar y Publicar</h2>
-      <p>Una vez que hayas hecho tus cambios, guarda y publica directamente a GitHub</p>
-      <button onclick="saveAndPush()" id="btn-save" class="btn-primary" style="background: white; color: var(--primary); max-width: 400px; margin: 0 auto;">
-        💾 Guardar y Subir a GitHub
-      </button>
-      <div id="save-status" style="margin-top: var(--spacing-lg); font-size: 0.875rem;"></div>
-    </section>
+    </div>
   </div>
 
   <script src="js/dataLoader.js"></script>
@@ -424,8 +625,6 @@
     async function loadData() {
       try {
         currentData = await DataLoader.load('data/print-data.json');
-        updateCurrentStatusDisplay();
-        loadProjectConfig();
       } catch (error) {
         console.error('Error cargando datos:', error);
         alert('Error al cargar datos. Usando datos vacíos.');
@@ -434,7 +633,8 @@
             projectName: "Proyecto Pensión Valdés",
             goals: { pocillos: 100, charolas: 20 },
             startDate: new Date().toISOString().split('T')[0],
-            targetEndDate: ""
+            targetEndDate: "",
+            workHoursPerDay: 18
           },
           currentPrint: {
             isActive: false,
@@ -447,6 +647,10 @@
           issues: []
         };
       }
+
+      updateCurrentStatusDisplay();
+      loadProjectConfig();
+      loadCurrentPrintForm();
     }
 
     // Actualizar display del estado actual
@@ -468,6 +672,31 @@
       }
     }
 
+    // Cargar estado actual en el formulario
+    function loadCurrentPrintForm() {
+      const isActive = currentData.currentPrint.isActive;
+      const isActiveInput = document.getElementById('is-active');
+      const details = document.getElementById('print-details');
+
+      isActiveInput.checked = isActive;
+      details.classList.toggle('hidden', !isActive);
+
+      if (isActive) {
+        document.getElementById('item-type').value = currentData.currentPrint.item || '';
+        document.getElementById('batch-size').value = currentData.currentPrint.batchSize || '';
+        document.getElementById('start-time').value = currentData.currentPrint.startTime || '';
+        document.getElementById('estimated-duration').value = currentData.currentPrint.estimatedDuration || '';
+      } else {
+        document.getElementById('item-type').value = '';
+        document.getElementById('batch-size').value = '';
+        document.getElementById('estimated-duration').value = '';
+
+        const now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        document.getElementById('start-time').value = now.toISOString().slice(0, 16);
+      }
+    }
+
     // Cargar configuración del proyecto en el formulario
     function loadProjectConfig() {
       document.getElementById('project-name').value = currentData.meta.projectName || '';
@@ -475,6 +704,9 @@
       document.getElementById('target-end-date').value = currentData.meta.targetEndDate || '';
       document.getElementById('goal-pocillos').value = currentData.meta.goals.pocillos || 100;
       document.getElementById('goal-charolas').value = currentData.meta.goals.charolas || 20;
+      const workHours = currentData.meta.workHoursPerDay || 18;
+      currentData.meta.workHoursPerDay = workHours;
+      document.getElementById('work-hours').value = workHours;
     }
 
     // Form: Actualizar configuración del proyecto
@@ -486,6 +718,7 @@
       currentData.meta.targetEndDate = document.getElementById('target-end-date').value;
       currentData.meta.goals.pocillos = parseInt(document.getElementById('goal-pocillos').value);
       currentData.meta.goals.charolas = parseInt(document.getElementById('goal-charolas').value);
+      currentData.meta.workHoursPerDay = parseInt(document.getElementById('work-hours').value);
 
       alert('Configuración actualizada. Click en "Guardar y Subir a GitHub" para publicar.');
     });
@@ -500,6 +733,7 @@
     document.getElementById('form-current-print').addEventListener('submit', (e) => {
       e.preventDefault();
 
+      const previousPrint = { ...currentData.currentPrint };
       const isActive = document.getElementById('is-active').checked;
 
       if (isActive) {
@@ -531,43 +765,106 @@
       }
 
       updateCurrentStatusDisplay();
+      if (currentData.currentPrint.isActive) {
+        syncCurrentPrintToHistory(previousPrint);
+      }
+      renderHistoryTable();
       alert('Estado actual actualizado. Click en "Guardar y Subir a GitHub" para publicar.');
     });
 
-    // Form: Registrar impresión
-    document.getElementById('form-register-print').addEventListener('submit', (e) => {
-      e.preventDefault();
+    // Agregar impresión al historial
+    function addHistoryItem() {
+      if (!currentData) return;
 
       const newId = currentData.history.length > 0
         ? Math.max(...currentData.history.map(h => h.id)) + 1
         : 1;
 
+      const today = new Date().toISOString().split('T')[0];
+      const defaultItem = currentData.currentPrint.item || 'pocillos';
+      const defaultBatch = currentData.currentPrint.batchSize || 1;
+      const defaultDuration = currentData.currentPrint.estimatedDuration || 0;
+
       const newEntry = {
         id: newId,
-        date: document.getElementById('register-date').value,
-        item: document.getElementById('register-item').value,
-        batchSize: parseInt(document.getElementById('register-batch').value),
-        duration: parseInt(document.getElementById('register-duration').value),
+        date: today,
+        item: defaultItem,
+        batchSize: defaultBatch,
+        duration: defaultDuration,
         status: "pending",
-        notes: document.getElementById('register-notes').value || ""
+        goodCount: 0,
+        notes: ""
       };
 
       currentData.history.push(newEntry);
-
-      // Desactivar currentPrint si estaba activo
-      currentData.currentPrint = {
-        isActive: false,
-        item: "",
-        batchSize: 0,
-        startTime: "",
-        estimatedDuration: 0
-      };
-
-      updateCurrentStatusDisplay();
       renderHistoryTable();
-      e.target.reset();
-      alert(`Impresión #${newId} registrada. Ahora clasifica el resultado en la tabla de abajo.`);
-    });
+      openRatingPanel(newId);
+    }
+
+    function syncCurrentPrintToHistory(previousPrint) {
+      const currentPrint = currentData.currentPrint;
+      if (!currentPrint.isActive) return;
+
+      const currentStartTime = currentPrint.startTime;
+      const existingIndex = currentData.history.findIndex(
+        (h) => h.startTime && h.startTime === currentStartTime
+      );
+
+      if (existingIndex !== -1) {
+        const existing = currentData.history[existingIndex];
+        if (existing.status !== 'pending') return;
+
+        currentData.history[existingIndex] = {
+          ...existing,
+          date: currentStartTime.split('T')[0],
+          item: currentPrint.item,
+          batchSize: currentPrint.batchSize,
+          duration: existing.duration || 0,
+          status: 'pending',
+          startTime: currentStartTime,
+          source: existing.source || 'currentPrint'
+        };
+        return;
+      }
+
+      const previousStartTime = previousPrint && previousPrint.startTime;
+      if (previousStartTime && previousStartTime !== currentStartTime) {
+        const previousIndex = currentData.history.findIndex(
+          (h) => h.startTime && h.startTime === previousStartTime && h.status === 'pending'
+        );
+        if (previousIndex !== -1) {
+          const existing = currentData.history[previousIndex];
+          currentData.history[previousIndex] = {
+            ...existing,
+            date: currentStartTime.split('T')[0],
+            item: currentPrint.item,
+            batchSize: currentPrint.batchSize,
+            duration: existing.duration || 0,
+            status: 'pending',
+            startTime: currentStartTime,
+            source: existing.source || 'currentPrint'
+          };
+          return;
+        }
+      }
+
+      const newId = currentData.history.length > 0
+        ? Math.max(...currentData.history.map(h => h.id)) + 1
+        : 1;
+
+      currentData.history.push({
+        id: newId,
+        date: currentStartTime.split('T')[0],
+        item: currentPrint.item,
+        batchSize: currentPrint.batchSize,
+        duration: 0,
+        status: 'pending',
+        goodCount: 0,
+        notes: '',
+        startTime: currentStartTime,
+        source: 'currentPrint'
+      });
+    }
 
     // Guardar y hacer push a GitHub
     async function saveAndPush() {
@@ -606,7 +903,7 @@
           throw new Error(pushData.error || 'Error en git push');
         }
 
-        status.innerHTML += '✅ Cambios subidos a GitHub<br><br>🎉 ¡Dashboard actualizado! Visita:<br><a href="https://ortegamatias.github.io/PensionValdes/" target="_blank" style="color: white; text-decoration: underline;">https://ortegamatias.github.io/PensionValdes/</a>';
+        status.innerHTML += '✅ Cambios subidos a GitHub<br><br>🎉 ¡Dashboard actualizado! Visita:<br><a href="https://ortegamatias.github.io/PensionValdes/" target="_blank">https://ortegamatias.github.io/PensionValdes/</a>';
         btn.textContent = '✅ Completado';
 
         setTimeout(() => {
@@ -643,18 +940,24 @@
           'failed': '<span class="status-failed">✗ Fallida</span>'
         };
         const statusBadge = statusLabels[h.status] || '<span class="status-pending">⏳ Pendiente</span>';
+        const hasGoodCount = Number.isFinite(h.goodCount);
+        const goodCountDisplay = hasGoodCount
+          ? h.goodCount
+          : (h.status === 'completed' ? h.batchSize : (h.status === 'failed' ? 0 : '--'));
+        const durationDisplay = h.duration > 0 ? `${h.duration} min` : '--';
 
         return `
-          <tr id="row-${h.id}" class="${h.status === 'pending' ? 'edit-row' : ''}">
+          <tr id="row-${h.id}" class="${h.status === 'pending' ? 'row-pending' : ''}">
             <td>#${h.id}</td>
             <td>${h.date}</td>
             <td>${h.item === 'pocillos' ? 'Pocillos' : 'Charolas'}</td>
             <td>${h.batchSize}</td>
-            <td>${h.duration} min</td>
+            <td>${goodCountDisplay}</td>
+            <td>${durationDisplay}</td>
             <td>${statusBadge}</td>
             <td>${h.notes || '--'}</td>
             <td>
-              <button class="btn-small btn-edit" onclick="editHistoryItem(${h.id})">✏️ Editar</button>
+              <button class="btn-small btn-edit" onclick="openRatingPanel(${h.id})">✅ Calificar</button>
               <button class="btn-small btn-delete" onclick="deleteHistoryItem(${h.id})">🗑️ Eliminar</button>
             </td>
           </tr>
@@ -662,94 +965,132 @@
       }).join('');
 
       container.innerHTML = `
-        <table class="history-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Fecha</th>
-              <th>Ítem</th>
-              <th>Lote</th>
-              <th>Duración</th>
-              <th>Estado</th>
-              <th>Notas</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${rows}
-          </tbody>
-        </table>
+        <div class="table-scroll">
+          <table class="history-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Fecha</th>
+                <th>Ítem</th>
+                <th>Lote</th>
+                <th>Buenas</th>
+                <th>Duración</th>
+                <th>Estado</th>
+                <th>Notas</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows}
+            </tbody>
+          </table>
+        </div>
       `;
     }
 
-    // Editar entrada del historial
+    // Panel de calificación
     let editingId = null;
 
-    function editHistoryItem(id) {
-      // Si ya estamos editando otro, cancelar
-      if (editingId !== null) {
-        cancelEdit();
-      }
-
+    function openRatingPanel(id) {
       const item = currentData.history.find(h => h.id === id);
       if (!item) return;
 
       editingId = id;
-      const row = document.getElementById(`row-${id}`);
 
-      row.classList.add('edit-row');
-      row.innerHTML = `
-        <td>#${id}</td>
-        <td><input type="date" id="edit-date-${id}" value="${item.date}"></td>
-        <td>
-          <select id="edit-item-${id}">
-            <option value="pocillos" ${item.item === 'pocillos' ? 'selected' : ''}>Pocillos</option>
-            <option value="charolas" ${item.item === 'charolas' ? 'selected' : ''}>Charolas</option>
-          </select>
-        </td>
-        <td><input type="number" id="edit-batch-${id}" value="${item.batchSize}" min="1"></td>
-        <td><input type="number" id="edit-duration-${id}" value="${item.duration}" min="0"></td>
-        <td>
-          <select id="edit-status-${id}">
-            <option value="pending" ${item.status === 'pending' ? 'selected' : ''}>⏳ Pendiente</option>
-            <option value="completed" ${item.status === 'completed' ? 'selected' : ''}>✓ Exitosa</option>
-            <option value="partial" ${item.status === 'partial' ? 'selected' : ''}>⚠️ Parcial</option>
-            <option value="failed" ${item.status === 'failed' ? 'selected' : ''}>✗ Fallida</option>
-          </select>
-        </td>
-        <td><textarea id="edit-notes-${id}">${item.notes || ''}</textarea></td>
-        <td>
-          <button class="btn-small" style="background: var(--success); color: white;" onclick="saveHistoryEdit(${id})">💾 Guardar</button>
-          <button class="btn-small" style="background: var(--idle); color: white;" onclick="cancelEdit()">✖ Cancelar</button>
-        </td>
-      `;
+      const itemLabel = item.item === 'charolas' ? 'Charolas' : 'Pocillos';
+      document.getElementById('rating-id').textContent = `#${id}`;
+      document.getElementById('rating-meta').textContent = `${itemLabel} · Lote ${item.batchSize}`;
+
+      document.getElementById('rate-date').value = item.date || new Date().toISOString().split('T')[0];
+      document.getElementById('rate-item').value = item.item || 'pocillos';
+      document.getElementById('rate-batch').value = item.batchSize || 1;
+      document.getElementById('rate-duration').value = item.duration || 0;
+      document.getElementById('rate-status').value = item.status || 'pending';
+
+      const goodCountDefault = Number.isFinite(item.goodCount)
+        ? item.goodCount
+        : (item.status === 'completed' ? item.batchSize : 0);
+      document.getElementById('rate-good').value = goodCountDefault;
+      document.getElementById('rate-notes').value = item.notes || '';
+
+      updateGoodHint();
+      document.getElementById('rating-panel').classList.remove('hidden');
     }
 
-    // Guardar edición
-    function saveHistoryEdit(id) {
-      const itemIndex = currentData.history.findIndex(h => h.id === id);
+    function closeRatingPanel() {
+      editingId = null;
+      document.getElementById('rating-panel').classList.add('hidden');
+    }
+
+    function updateGoodHint() {
+      const batchValue = parseInt(document.getElementById('rate-batch').value);
+      const batchSize = Number.isNaN(batchValue) ? 0 : batchValue;
+      const hint = document.getElementById('rate-good-hint');
+      hint.textContent = `Rango: 0 - ${batchSize}`;
+
+      const goodValue = parseInt(document.getElementById('rate-good').value);
+      if (!Number.isNaN(goodValue) && goodValue > batchSize) {
+        document.getElementById('rate-good').value = batchSize;
+      }
+    }
+
+    document.getElementById('rate-batch').addEventListener('input', updateGoodHint);
+    document.getElementById('rate-status').addEventListener('change', () => {
+      const status = document.getElementById('rate-status').value;
+      const batchValue = parseInt(document.getElementById('rate-batch').value);
+      const batchSize = Number.isNaN(batchValue) ? 0 : batchValue;
+      const goodInput = document.getElementById('rate-good');
+
+      if (status === 'completed') {
+        goodInput.value = batchSize;
+      } else if (status === 'failed') {
+        goodInput.value = 0;
+      }
+    });
+
+    document.getElementById('form-rate').addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (editingId === null) return;
+
+      const itemIndex = currentData.history.findIndex(h => h.id === editingId);
       if (itemIndex === -1) return;
 
+      const batchValue = parseInt(document.getElementById('rate-batch').value);
+      const durationValue = parseInt(document.getElementById('rate-duration').value);
+      const batchSize = Number.isNaN(batchValue) ? 0 : batchValue;
+      const duration = Number.isNaN(durationValue) ? 0 : durationValue;
+      const status = document.getElementById('rate-status').value;
+      let goodCount = parseInt(document.getElementById('rate-good').value);
+
+      if (Number.isNaN(goodCount)) {
+        goodCount = status === 'completed' ? batchSize : 0;
+      }
+
+      if (status === 'completed') {
+        goodCount = batchSize;
+      } else if (status === 'failed') {
+        goodCount = 0;
+      } else {
+        goodCount = Math.min(Math.max(0, goodCount), batchSize);
+      }
+
+      const existing = currentData.history[itemIndex];
       currentData.history[itemIndex] = {
-        id: id,
-        date: document.getElementById(`edit-date-${id}`).value,
-        item: document.getElementById(`edit-item-${id}`).value,
-        batchSize: parseInt(document.getElementById(`edit-batch-${id}`).value),
-        duration: parseInt(document.getElementById(`edit-duration-${id}`).value),
-        status: document.getElementById(`edit-status-${id}`).value,
-        notes: document.getElementById(`edit-notes-${id}`).value
+        ...existing,
+        id: editingId,
+        date: document.getElementById('rate-date').value,
+        item: document.getElementById('rate-item').value,
+        batchSize: batchSize,
+        goodCount: goodCount,
+        duration: duration,
+        status: status,
+        notes: document.getElementById('rate-notes').value
       };
 
-      editingId = null;
       renderHistoryTable();
-      alert('Cambios guardados. No olvides hacer click en "Guardar y Subir a GitHub".');
-    }
-
-    // Cancelar edición
-    function cancelEdit() {
-      editingId = null;
-      renderHistoryTable();
-    }
+      openRatingPanel(editingId);
+      alert('Calificación guardada. No olvides hacer click en "Guardar y Subir a GitHub".');
+    });
 
     // Eliminar entrada del historial
     function deleteHistoryItem(id) {
@@ -762,6 +1103,10 @@
       // También eliminar issues relacionados
       currentData.issues = currentData.issues.filter(i => i.printId !== id);
 
+      if (editingId === id) {
+        closeRatingPanel();
+      }
+
       renderHistoryTable();
       alert('Entrada eliminada. No olvides hacer click en "Guardar y Subir a GitHub".');
     }
@@ -769,20 +1114,14 @@
     // Inicializar
     async function init() {
       await loadData();
+      if (currentData && currentData.currentPrint && currentData.currentPrint.isActive) {
+        syncCurrentPrintToHistory();
+      }
       renderHistoryTable();
     }
 
     init();
 
-    // Establecer fecha de hoy por defecto
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('complete-date').value = today;
-    document.getElementById('failed-date').value = today;
-
-    // Establecer datetime actual
-    const now = new Date();
-    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-    document.getElementById('start-time').value = now.toISOString().slice(0, 16);
   </script>
 </body>
 </html>
