@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editor Dashboard - Pensión Valdés</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <style>
+    .editor-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: var(--spacing-lg);
+    }
+
+    .form-group {
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: var(--spacing-sm);
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: var(--spacing-md);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 1rem;
+      font-family: var(--font-sans);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--spacing-md);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: var(--spacing-md) var(--spacing-xl);
+      border-radius: var(--radius-md);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      width: 100%;
+    }
+
+    .btn-primary:hover {
+      background: #1d4ed8;
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-success {
+      background: var(--success);
+    }
+
+    .btn-success:hover {
+      background: #059669;
+    }
+
+    .btn-danger {
+      background: var(--error);
+    }
+
+    .btn-danger:hover {
+      background: #dc2626;
+    }
+
+    .section-divider {
+      margin: var(--spacing-2xl) 0;
+      border: none;
+      border-top: 2px solid var(--border);
+    }
+
+    .current-status-box {
+      background: var(--bg-secondary);
+      padding: var(--spacing-lg);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .status-indicator {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: var(--spacing-sm);
+    }
+
+    .status-active {
+      background: var(--success);
+    }
+
+    .status-inactive {
+      background: var(--idle);
+    }
+
+    .download-section {
+      background: linear-gradient(135deg, var(--primary) 0%, #1d4ed8 100%);
+      color: white;
+      padding: var(--spacing-xl);
+      border-radius: var(--radius-lg);
+      text-align: center;
+      margin-top: var(--spacing-2xl);
+    }
+
+    .download-section h2 {
+      margin-bottom: var(--spacing-md);
+    }
+
+    .download-section p {
+      margin-bottom: var(--spacing-lg);
+      opacity: 0.9;
+    }
+
+    .code-block {
+      background: rgba(0, 0, 0, 0.2);
+      padding: var(--spacing-md);
+      border-radius: var(--radius-md);
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      text-align: left;
+      margin: var(--spacing-md) 0;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="editor-container">
+    <header class="header">
+      <div class="header-content">
+        <h1>Editor de Datos</h1>
+        <p class="subtitle">Actualiza el estado de tus impresiones</p>
+      </div>
+      <a href="index.html" class="btn-secondary" style="text-decoration: none; display: inline-block;">
+        Ver Dashboard
+      </a>
+    </header>
+
+    <!-- Estado Actual -->
+    <section class="card">
+      <h2 class="section-title">Estado Actual</h2>
+      <div class="current-status-box" id="current-status-display">
+        <!-- Actualizado dinámicamente -->
+      </div>
+
+      <form id="form-current-print">
+        <div class="form-group">
+          <label>
+            <input type="checkbox" id="is-active">
+            Hay una impresión en curso
+          </label>
+        </div>
+
+        <div id="print-details" class="hidden">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="item-type">Tipo de ítem</label>
+              <select id="item-type">
+                <option value="">Seleccionar...</option>
+                <option value="pocillos">Pocillos</option>
+                <option value="charolas">Charolas</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="batch-size">Tamaño del lote</label>
+              <input type="number" id="batch-size" min="1" placeholder="4">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="start-time">Fecha y hora de inicio</label>
+              <input type="datetime-local" id="start-time">
+            </div>
+
+            <div class="form-group">
+              <label for="estimated-duration">Duración estimada (minutos)</label>
+              <input type="number" id="estimated-duration" min="1" placeholder="180">
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary">Actualizar Estado Actual</button>
+      </form>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- Completar Impresión -->
+    <section class="card">
+      <h2 class="section-title">Completar Impresión</h2>
+      <p class="text-muted" style="margin-bottom: var(--spacing-lg);">
+        Registra una impresión que terminó exitosamente
+      </p>
+
+      <form id="form-complete-print">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="complete-item">Tipo de ítem</label>
+            <select id="complete-item" required>
+              <option value="">Seleccionar...</option>
+              <option value="pocillos">Pocillos</option>
+              <option value="charolas">Charolas</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="complete-batch">Tamaño del lote</label>
+            <input type="number" id="complete-batch" min="1" required placeholder="4">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="complete-date">Fecha</label>
+            <input type="date" id="complete-date" required>
+          </div>
+
+          <div class="form-group">
+            <label for="complete-duration">Duración real (minutos)</label>
+            <input type="number" id="complete-duration" min="1" required placeholder="185">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="complete-notes">Notas (opcional)</label>
+          <textarea id="complete-notes" placeholder="Ej: Primera impresión exitosa"></textarea>
+        </div>
+
+        <button type="submit" class="btn-primary btn-success">Agregar Impresión Completada</button>
+      </form>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- Registrar Fallo -->
+    <section class="card">
+      <h2 class="section-title">Registrar Fallo</h2>
+      <p class="text-muted" style="margin-bottom: var(--spacing-lg);">
+        Registra una impresión que falló y documenta el problema
+      </p>
+
+      <form id="form-failed-print">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="failed-item">Tipo de ítem</label>
+            <select id="failed-item" required>
+              <option value="">Seleccionar...</option>
+              <option value="pocillos">Pocillos</option>
+              <option value="charolas">Charolas</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="failed-batch">Tamaño del lote</label>
+            <input type="number" id="failed-batch" min="1" required placeholder="1">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="failed-date">Fecha</label>
+          <input type="date" id="failed-date" required>
+        </div>
+
+        <div class="form-group">
+          <label for="issue-type">Tipo de problema</label>
+          <select id="issue-type" required>
+            <option value="">Seleccionar...</option>
+            <option value="material">Material (filamento)</option>
+            <option value="hardware">Hardware (mecánico)</option>
+            <option value="software">Software (configuración)</option>
+            <option value="adhesion">Adhesión (a la cama)</option>
+            <option value="quality">Calidad de impresión</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="issue-description">Descripción del problema</label>
+          <textarea id="issue-description" required placeholder="¿Qué salió mal?"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="issue-resolution">Resolución (opcional)</label>
+          <textarea id="issue-resolution" placeholder="¿Cómo lo resolviste?"></textarea>
+        </div>
+
+        <button type="submit" class="btn-primary btn-danger">Registrar Fallo</button>
+      </form>
+    </section>
+
+    <!-- Descargar JSON -->
+    <section class="download-section">
+      <h2>3. Descarga el archivo actualizado</h2>
+      <p>Una vez que hayas hecho tus cambios, descarga el archivo JSON y súbelo a GitHub</p>
+      <button onclick="downloadJSON()" class="btn-primary" style="background: white; color: var(--primary); max-width: 300px; margin: 0 auto;">
+        📥 Descargar print-data.json
+      </button>
+
+      <div class="code-block">
+        <div>Luego ejecuta estos comandos:</div>
+        <div style="margin-top: var(--spacing-sm);">
+          git add data/print-data.json<br>
+          git commit -m "Actualizar estado"<br>
+          git push
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="js/dataLoader.js"></script>
+  <script>
+    let currentData = null;
+
+    // Cargar datos al iniciar
+    async function loadData() {
+      try {
+        currentData = await DataLoader.load('data/print-data.json');
+        updateCurrentStatusDisplay();
+      } catch (error) {
+        console.error('Error cargando datos:', error);
+        alert('Error al cargar datos. Usando datos vacíos.');
+        currentData = {
+          meta: {
+            projectName: "Proyecto Pensión Valdés",
+            goals: { pocillos: 100, charolas: 20 },
+            startDate: new Date().toISOString().split('T')[0]
+          },
+          currentPrint: {
+            isActive: false,
+            item: "",
+            batchSize: 0,
+            startTime: "",
+            estimatedDuration: 0
+          },
+          history: [],
+          issues: []
+        };
+      }
+    }
+
+    // Actualizar display del estado actual
+    function updateCurrentStatusDisplay() {
+      const display = document.getElementById('current-status-display');
+      const isActive = currentData.currentPrint.isActive;
+
+      if (isActive) {
+        display.innerHTML = `
+          <span class="status-indicator status-active"></span>
+          <strong>FUNCIONANDO</strong> - Imprimiendo ${currentData.currentPrint.batchSize}
+          ${currentData.currentPrint.item} (estimado: ${currentData.currentPrint.estimatedDuration} min)
+        `;
+      } else {
+        display.innerHTML = `
+          <span class="status-indicator status-inactive"></span>
+          <strong>EN REPOSO</strong> - No hay impresión activa
+        `;
+      }
+    }
+
+    // Toggle detalles de impresión
+    document.getElementById('is-active').addEventListener('change', (e) => {
+      const details = document.getElementById('print-details');
+      details.classList.toggle('hidden', !e.target.checked);
+    });
+
+    // Form: Actualizar estado actual
+    document.getElementById('form-current-print').addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const isActive = document.getElementById('is-active').checked;
+
+      if (isActive) {
+        const itemType = document.getElementById('item-type').value;
+        const batchSize = parseInt(document.getElementById('batch-size').value);
+        const startTime = document.getElementById('start-time').value;
+        const estimatedDuration = parseInt(document.getElementById('estimated-duration').value);
+
+        if (!itemType || !batchSize || !startTime || !estimatedDuration) {
+          alert('Por favor completa todos los campos');
+          return;
+        }
+
+        currentData.currentPrint = {
+          isActive: true,
+          item: itemType,
+          batchSize: batchSize,
+          startTime: startTime,
+          estimatedDuration: estimatedDuration
+        };
+      } else {
+        currentData.currentPrint = {
+          isActive: false,
+          item: "",
+          batchSize: 0,
+          startTime: "",
+          estimatedDuration: 0
+        };
+      }
+
+      updateCurrentStatusDisplay();
+      alert('Estado actual actualizado. No olvides descargar el JSON.');
+    });
+
+    // Form: Completar impresión
+    document.getElementById('form-complete-print').addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const newId = currentData.history.length > 0
+        ? Math.max(...currentData.history.map(h => h.id)) + 1
+        : 1;
+
+      const newEntry = {
+        id: newId,
+        date: document.getElementById('complete-date').value,
+        item: document.getElementById('complete-item').value,
+        batchSize: parseInt(document.getElementById('complete-batch').value),
+        duration: parseInt(document.getElementById('complete-duration').value),
+        status: "completed",
+        notes: document.getElementById('complete-notes').value || ""
+      };
+
+      currentData.history.push(newEntry);
+
+      // Desactivar currentPrint si estaba activo
+      currentData.currentPrint = {
+        isActive: false,
+        item: "",
+        batchSize: 0,
+        startTime: "",
+        estimatedDuration: 0
+      };
+
+      updateCurrentStatusDisplay();
+      e.target.reset();
+      alert(`Impresión #${newId} agregada exitosamente. No olvides descargar el JSON.`);
+    });
+
+    // Form: Registrar fallo
+    document.getElementById('form-failed-print').addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const newHistoryId = currentData.history.length > 0
+        ? Math.max(...currentData.history.map(h => h.id)) + 1
+        : 1;
+
+      const newIssueId = currentData.issues.length > 0
+        ? Math.max(...currentData.issues.map(i => i.id)) + 1
+        : 1;
+
+      const date = document.getElementById('failed-date').value;
+
+      // Agregar al historial
+      const historyEntry = {
+        id: newHistoryId,
+        date: date,
+        item: document.getElementById('failed-item').value,
+        batchSize: parseInt(document.getElementById('failed-batch').value),
+        duration: 0,
+        status: "failed",
+        notes: document.getElementById('issue-description').value
+      };
+
+      currentData.history.push(historyEntry);
+
+      // Agregar a issues
+      const issueEntry = {
+        id: newIssueId,
+        date: date,
+        type: document.getElementById('issue-type').value,
+        description: document.getElementById('issue-description').value,
+        resolution: document.getElementById('issue-resolution').value || "",
+        printId: newHistoryId
+      };
+
+      currentData.issues.push(issueEntry);
+
+      // Desactivar currentPrint
+      currentData.currentPrint = {
+        isActive: false,
+        item: "",
+        batchSize: 0,
+        startTime: "",
+        estimatedDuration: 0
+      };
+
+      updateCurrentStatusDisplay();
+      e.target.reset();
+      alert(`Fallo #${newHistoryId} registrado. No olvides descargar el JSON.`);
+    });
+
+    // Descargar JSON
+    function downloadJSON() {
+      const dataStr = JSON.stringify(currentData, null, 2);
+      const dataBlob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(dataBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'print-data.json';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      alert('Archivo descargado. Reemplaza data/print-data.json con este archivo y haz git push.');
+    }
+
+    // Inicializar
+    loadData();
+
+    // Establecer fecha de hoy por defecto
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('complete-date').value = today;
+    document.getElementById('failed-date').value = today;
+
+    // Establecer datetime actual
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    document.getElementById('start-time').value = now.toISOString().slice(0, 16);
+  </script>
+</body>
+</html>
