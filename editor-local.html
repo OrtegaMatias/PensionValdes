@@ -150,6 +150,76 @@
     .hidden {
       display: none;
     }
+
+    .history-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: var(--spacing-md);
+    }
+
+    .history-table th {
+      text-align: left;
+      padding: var(--spacing-sm);
+      background: var(--bg-secondary);
+      border-bottom: 2px solid var(--border);
+      font-size: 0.875rem;
+    }
+
+    .history-table td {
+      padding: var(--spacing-sm);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .history-table tbody tr:hover {
+      background: var(--bg-secondary);
+    }
+
+    .btn-small {
+      padding: var(--spacing-xs) var(--spacing-sm);
+      font-size: 0.75rem;
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+      margin-right: var(--spacing-xs);
+    }
+
+    .btn-edit {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-delete {
+      background: var(--error);
+      color: white;
+    }
+
+    .btn-small:hover {
+      opacity: 0.8;
+    }
+
+    .edit-row {
+      background: #fef3c7 !important;
+    }
+
+    .edit-row input,
+    .edit-row select,
+    .edit-row textarea {
+      padding: var(--spacing-xs);
+      font-size: 0.875rem;
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+    }
+
+    .edit-row textarea {
+      min-height: 40px;
+    }
+
+    .no-history {
+      text-align: center;
+      padding: var(--spacing-xl);
+      color: var(--text-secondary);
+    }
   </style>
 </head>
 <body>
@@ -317,6 +387,20 @@
       </form>
     </section>
 
+    <hr class="section-divider">
+
+    <!-- Gestionar Historial -->
+    <section class="card">
+      <h2 class="section-title">Gestionar Historial</h2>
+      <p class="text-muted" style="margin-bottom: var(--spacing-lg);">
+        Edita o elimina impresiones del historial
+      </p>
+
+      <div id="history-management">
+        <!-- Renderizado dinámicamente -->
+      </div>
+    </section>
+
     <!-- Guardar y Publicar -->
     <section class="download-section">
       <h2>3. Guardar y Publicar</h2>
@@ -452,6 +536,7 @@
       };
 
       updateCurrentStatusDisplay();
+      renderHistoryTable();
       e.target.reset();
       alert(`Impresión #${newId} agregada exitosamente. Click en "Guardar y Subir a GitHub" para publicar.`);
     });
@@ -505,6 +590,7 @@
       };
 
       updateCurrentStatusDisplay();
+      renderHistoryTable();
       e.target.reset();
       alert(`Fallo #${newHistoryId} registrado. Click en "Guardar y Subir a GitHub" para publicar.`);
     });
@@ -562,8 +648,151 @@
       }
     }
 
+    // Renderizar tabla de historial
+    function renderHistoryTable() {
+      const container = document.getElementById('history-management');
+      if (!container) return;
+
+      if (!currentData.history || currentData.history.length === 0) {
+        container.innerHTML = '<div class="no-history">No hay impresiones en el historial</div>';
+        return;
+      }
+
+      // Ordenar por ID (más reciente primero)
+      const sorted = [...currentData.history].sort((a, b) => b.id - a.id);
+
+      const rows = sorted.map(h => {
+        const statusBadge = h.status === 'completed'
+          ? '<span style="color: var(--success);">✓ Completada</span>'
+          : '<span style="color: var(--error);">✗ Fallida</span>';
+
+        return `
+          <tr id="row-${h.id}">
+            <td>#${h.id}</td>
+            <td>${h.date}</td>
+            <td>${h.item === 'pocillos' ? 'Pocillos' : 'Charolas'}</td>
+            <td>${h.batchSize}</td>
+            <td>${h.duration} min</td>
+            <td>${statusBadge}</td>
+            <td>${h.notes || '--'}</td>
+            <td>
+              <button class="btn-small btn-edit" onclick="editHistoryItem(${h.id})">✏️ Editar</button>
+              <button class="btn-small btn-delete" onclick="deleteHistoryItem(${h.id})">🗑️ Eliminar</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      container.innerHTML = `
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Fecha</th>
+              <th>Ítem</th>
+              <th>Lote</th>
+              <th>Duración</th>
+              <th>Estado</th>
+              <th>Notas</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows}
+          </tbody>
+        </table>
+      `;
+    }
+
+    // Editar entrada del historial
+    let editingId = null;
+
+    function editHistoryItem(id) {
+      // Si ya estamos editando otro, cancelar
+      if (editingId !== null) {
+        cancelEdit();
+      }
+
+      const item = currentData.history.find(h => h.id === id);
+      if (!item) return;
+
+      editingId = id;
+      const row = document.getElementById(`row-${id}`);
+
+      row.classList.add('edit-row');
+      row.innerHTML = `
+        <td>#${id}</td>
+        <td><input type="date" id="edit-date-${id}" value="${item.date}"></td>
+        <td>
+          <select id="edit-item-${id}">
+            <option value="pocillos" ${item.item === 'pocillos' ? 'selected' : ''}>Pocillos</option>
+            <option value="charolas" ${item.item === 'charolas' ? 'selected' : ''}>Charolas</option>
+          </select>
+        </td>
+        <td><input type="number" id="edit-batch-${id}" value="${item.batchSize}" min="1"></td>
+        <td><input type="number" id="edit-duration-${id}" value="${item.duration}" min="0"></td>
+        <td>
+          <select id="edit-status-${id}">
+            <option value="completed" ${item.status === 'completed' ? 'selected' : ''}>Completada</option>
+            <option value="failed" ${item.status === 'failed' ? 'selected' : ''}>Fallida</option>
+          </select>
+        </td>
+        <td><textarea id="edit-notes-${id}">${item.notes || ''}</textarea></td>
+        <td>
+          <button class="btn-small" style="background: var(--success); color: white;" onclick="saveHistoryEdit(${id})">💾 Guardar</button>
+          <button class="btn-small" style="background: var(--idle); color: white;" onclick="cancelEdit()">✖ Cancelar</button>
+        </td>
+      `;
+    }
+
+    // Guardar edición
+    function saveHistoryEdit(id) {
+      const itemIndex = currentData.history.findIndex(h => h.id === id);
+      if (itemIndex === -1) return;
+
+      currentData.history[itemIndex] = {
+        id: id,
+        date: document.getElementById(`edit-date-${id}`).value,
+        item: document.getElementById(`edit-item-${id}`).value,
+        batchSize: parseInt(document.getElementById(`edit-batch-${id}`).value),
+        duration: parseInt(document.getElementById(`edit-duration-${id}`).value),
+        status: document.getElementById(`edit-status-${id}`).value,
+        notes: document.getElementById(`edit-notes-${id}`).value
+      };
+
+      editingId = null;
+      renderHistoryTable();
+      alert('Cambios guardados. No olvides hacer click en "Guardar y Subir a GitHub".');
+    }
+
+    // Cancelar edición
+    function cancelEdit() {
+      editingId = null;
+      renderHistoryTable();
+    }
+
+    // Eliminar entrada del historial
+    function deleteHistoryItem(id) {
+      if (!confirm(`¿Seguro que quieres eliminar la impresión #${id}?`)) {
+        return;
+      }
+
+      currentData.history = currentData.history.filter(h => h.id !== id);
+
+      // También eliminar issues relacionados
+      currentData.issues = currentData.issues.filter(i => i.printId !== id);
+
+      renderHistoryTable();
+      alert('Entrada eliminada. No olvides hacer click en "Guardar y Subir a GitHub".');
+    }
+
     // Inicializar
-    loadData();
+    async function init() {
+      await loadData();
+      renderHistoryTable();
+    }
+
+    init();
 
     // Establecer fecha de hoy por defecto
     const today = new Date().toISOString().split('T')[0];
