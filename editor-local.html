@@ -9,57 +9,521 @@
   <link rel="stylesheet" href="css/responsive.css">
   <style>
     .editor-container {
-      max-width: 1200px;
+      max-width: 1400px;
       margin: 0 auto;
-      padding: var(--spacing-xl);
+      padding: var(--spacing-lg);
     }
 
+    .editor-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--spacing-xl);
+      flex-wrap: wrap;
+      gap: var(--spacing-md);
+    }
+
+    .editor-title {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+    }
+
+    .editor-title h1 {
+      font-size: 1.75rem;
+      margin: 0;
+    }
+
+    .quick-actions {
+      display: flex;
+      gap: var(--spacing-sm);
+      flex-wrap: wrap;
+    }
+
+    /* Config Pill - Botón pequeño expandible */
+    .config-pill {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: var(--spacing-sm) var(--spacing-lg);
+      border-radius: 20px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+    }
+
+    .config-pill:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .config-pill.active {
+      background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    }
+
+    .config-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .config-modal.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .config-content {
+      background: var(--bg-primary);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-2xl);
+      max-width: 600px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .config-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .config-header h2 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    .close-config {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-secondary);
+      padding: 0;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.2s ease;
+    }
+
+    .close-config:hover {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+    }
+
+    /* Main Layout */
     .editor-layout {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
-      gap: var(--spacing-2xl);
+      grid-template-columns: 1fr 380px;
+      gap: var(--spacing-xl);
       align-items: start;
     }
 
-    .editor-column {
-      display: grid;
-      gap: var(--spacing-xl);
+    /* Estado Actual - Compacto y visual */
+    .status-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-xl);
+      margin-bottom: var(--spacing-xl);
+      box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
     }
 
-    .section-header {
+    .status-display {
       display: flex;
       align-items: center;
-      gap: var(--spacing-sm);
-      margin-bottom: var(--spacing-sm);
+      gap: var(--spacing-md);
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: var(--spacing-lg);
     }
 
-    .editor-column section {
-      margin-bottom: 0;
+    .status-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
     }
 
-    .section-header .section-title {
-      margin-bottom: 0;
+    .status-dot.active {
+      background: #10b981;
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 1);
     }
 
-    .step-pill {
+    .status-dot.inactive {
+      background: #6b7280;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      }
+      50% {
+        box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+      }
+    }
+
+    .status-toggle {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      background: rgba(255, 255, 255, 0.1);
+      padding: var(--spacing-md);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .status-toggle:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .toggle-switch.active {
+      background: #10b981;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .toggle-switch.active .toggle-slider {
+      left: 22px;
+    }
+
+    .status-form {
+      display: none;
+      margin-top: var(--spacing-lg);
+      padding-top: var(--spacing-lg);
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .status-form.active {
+      display: block;
+    }
+
+    .status-form .form-group label {
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 500;
+    }
+
+    .status-form input,
+    .status-form select {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white;
+    }
+
+    .status-form input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .status-form input:focus,
+    .status-form select:focus {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.5);
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+    }
+
+    /* Impresiones - Tabla principal */
+    .prints-card {
+      background: var(--bg-primary);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .prints-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--spacing-xl);
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .prints-header h2 {
+      margin: 0;
+      font-size: 1.25rem;
+    }
+
+    .add-print-btn {
+      background: var(--success);
+      color: white;
+      border: none;
+      padding: var(--spacing-sm) var(--spacing-lg);
+      border-radius: var(--radius-md);
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
       display: inline-flex;
       align-items: center;
-      justify-content: center;
-      width: 28px;
-      height: 28px;
-      border-radius: var(--radius-full);
-      background: var(--bg-tertiary);
-      color: var(--text-primary);
-      font-weight: 700;
-      font-size: 0.875rem;
+      gap: var(--spacing-xs);
     }
 
-    .helper-text {
-      font-size: 0.85rem;
+    .add-print-btn:hover {
+      background: #059669;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-lg);
+      padding: var(--spacing-md) var(--spacing-xl);
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border);
+      font-size: 0.8125rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+    }
+
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .table-container {
+      overflow-x: auto;
+    }
+
+    .history-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 800px;
+    }
+
+    .history-table th {
+      text-align: left;
+      padding: var(--spacing-md) var(--spacing-lg);
+      background: var(--bg-secondary);
+      font-weight: 600;
+      font-size: 0.8125rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-secondary);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .history-table td {
+      padding: var(--spacing-md) var(--spacing-lg);
+      border-top: 1px solid var(--border);
+      font-size: 0.9375rem;
+    }
+
+    .history-table tbody tr {
+      transition: all 0.2s ease;
+    }
+
+    .history-table tbody tr:hover {
+      background: var(--bg-secondary);
+    }
+
+    .history-table tbody tr.row-pending {
+      background: #fef3c7;
+    }
+
+    .history-table tbody tr.row-pending:hover {
+      background: #fde68a;
+    }
+
+    .btn-rate {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: var(--spacing-xs) var(--spacing-md);
+      border-radius: var(--radius-sm);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+    }
+
+    .btn-rate:hover {
+      background: #1d4ed8;
+      transform: translateY(-1px);
+    }
+
+    .btn-delete {
+      background: none;
+      color: var(--text-secondary);
+      border: none;
+      padding: var(--spacing-xs);
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn-delete:hover {
+      color: var(--error);
+    }
+
+    /* Panel de Calificación */
+    .rating-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1001;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .rating-modal.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .rating-content {
+      background: var(--bg-primary);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-2xl);
+      max-width: 600px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+      animation: slideUp 0.3s ease;
+    }
+
+    .rating-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .rating-header h3 {
+      margin: 0;
+      font-size: 1.25rem;
+    }
+
+    .rating-meta {
+      font-size: 0.875rem;
       color: var(--text-secondary);
       margin-top: var(--spacing-xs);
     }
 
+    /* Sidebar - Save Panel */
+    .save-panel {
+      position: sticky;
+      top: var(--spacing-lg);
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-xl);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .save-panel h3 {
+      margin: 0 0 var(--spacing-sm) 0;
+      font-size: 1.125rem;
+    }
+
+    .save-panel p {
+      margin: 0 0 var(--spacing-lg) 0;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .btn-save {
+      width: 100%;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      border: none;
+      padding: var(--spacing-md) var(--spacing-lg);
+      border-radius: var(--radius-md);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-save:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn-save:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .save-status {
+      margin-top: var(--spacing-lg);
+      padding: var(--spacing-md);
+      border-radius: var(--radius-md);
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+
+    .save-status a {
+      color: var(--primary);
+      text-decoration: underline;
+    }
+
+    /* Form Styles */
     .form-group {
       margin-bottom: var(--spacing-lg);
     }
@@ -69,6 +533,7 @@
       margin-bottom: var(--spacing-sm);
       font-weight: 600;
       color: var(--text-primary);
+      font-size: 0.875rem;
     }
 
     .form-group input,
@@ -78,8 +543,9 @@
       padding: var(--spacing-md);
       border: 1px solid var(--border);
       border-radius: var(--radius-md);
-      font-size: 1rem;
+      font-size: 0.9375rem;
       font-family: var(--font-sans);
+      transition: all 0.2s ease;
     }
 
     .form-group textarea {
@@ -101,13 +567,19 @@
       gap: var(--spacing-md);
     }
 
+    .helper-text {
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+      margin-top: var(--spacing-xs);
+    }
+
     .btn-primary {
       background: var(--primary);
       color: white;
       border: none;
       padding: var(--spacing-md) var(--spacing-xl);
       border-radius: var(--radius-md);
-      font-size: 1rem;
+      font-size: 0.9375rem;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -117,261 +589,45 @@
     .btn-primary:hover {
       background: #1d4ed8;
       transform: translateY(-1px);
-      box-shadow: var(--shadow-md);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
     }
 
-    .btn-success {
-      background: var(--success);
-    }
-
-    .btn-success:hover {
-      background: #059669;
-    }
-
-    .btn-danger {
-      background: var(--error);
-    }
-
-    .btn-danger:hover {
-      background: #dc2626;
-    }
-
-    .section-divider {
-      margin: var(--spacing-2xl) 0;
-      border: none;
-      border-top: 2px solid var(--border);
-    }
-
-    .table-scroll {
-      overflow-x: auto;
-      background: var(--bg-primary);
+    .btn-secondary {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
       border: 1px solid var(--border);
+      padding: var(--spacing-sm) var(--spacing-lg);
       border-radius: var(--radius-md);
-    }
-
-    .current-status-box {
-      background: var(--bg-secondary);
-      padding: var(--spacing-lg);
-      border-radius: var(--radius-md);
-      margin-bottom: var(--spacing-lg);
-    }
-
-    .status-indicator {
-      display: inline-block;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      margin-right: var(--spacing-sm);
-    }
-
-    .status-active {
-      background: var(--success);
-    }
-
-    .status-inactive {
-      background: var(--idle);
-    }
-
-    .save-panel {
-      position: sticky;
-      top: var(--spacing-lg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: var(--spacing-xl);
-      background: var(--bg-primary);
-      box-shadow: var(--shadow-sm);
-    }
-
-    .save-panel h2 {
-      margin-bottom: var(--spacing-sm);
-    }
-
-    .save-panel p {
-      margin-bottom: var(--spacing-lg);
-      color: var(--text-secondary);
-    }
-
-    .save-status a {
-      color: var(--primary);
-      text-decoration: underline;
-    }
-
-    .save-status {
-      margin-top: var(--spacing-lg);
       font-size: 0.875rem;
-      color: var(--text-secondary);
-    }
-
-    .code-block {
-      background: rgba(0, 0, 0, 0.2);
-      padding: var(--spacing-md);
-      border-radius: var(--radius-md);
-      font-family: var(--font-mono);
-      font-size: 0.875rem;
-      text-align: left;
-      margin: var(--spacing-md) 0;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .history-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: var(--spacing-md);
-    }
-
-    .table-scroll .history-table {
-      margin-top: 0;
-      min-width: 720px;
-    }
-
-    .history-table th {
-      text-align: left;
-      padding: var(--spacing-sm);
-      background: var(--bg-secondary);
-      border-bottom: 2px solid var(--border);
-      font-size: 0.875rem;
-    }
-
-    .history-table td {
-      padding: var(--spacing-sm);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .history-table tbody tr:hover {
-      background: var(--bg-secondary);
-    }
-
-    .btn-small {
-      padding: var(--spacing-xs) var(--spacing-sm);
-      font-size: 0.75rem;
-      border-radius: var(--radius-sm);
-      border: none;
+      font-weight: 600;
       cursor: pointer;
-      margin-right: var(--spacing-xs);
-    }
-
-    .btn-edit {
-      background: var(--primary);
-      color: white;
-    }
-
-    .btn-delete {
-      background: var(--error);
-      color: white;
-    }
-
-    .btn-small:hover {
-      opacity: 0.8;
-    }
-
-    .status-pending {
-      color: var(--warning);
-      font-weight: 600;
-    }
-
-    .status-completed {
-      color: var(--success);
-      font-weight: 600;
-    }
-
-    .status-partial {
-      color: #f59e0b;
-      font-weight: 600;
-    }
-
-    .status-failed {
-      color: var(--error);
-      font-weight: 600;
-    }
-
-    .row-pending {
-      background: #fef3c7;
-    }
-
-    .history-toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--spacing-md);
-      margin-bottom: var(--spacing-md);
-    }
-
-    .legend {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--spacing-md);
-      font-size: 0.85rem;
-      color: var(--text-secondary);
-    }
-
-    .legend-item {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--spacing-xs);
-    }
-
-    .legend-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
+      transition: all 0.2s ease;
+      text-decoration: none;
       display: inline-block;
     }
 
-    .legend-dot.status-completed {
-      background: var(--success);
+    .btn-secondary:hover {
+      background: var(--bg-tertiary);
+      border-color: var(--primary);
     }
 
-    .legend-dot.status-partial {
-      background: #f59e0b;
+    .no-history {
+      text-align: center;
+      padding: var(--spacing-2xl);
+      color: var(--text-secondary);
     }
 
-    .legend-dot.status-failed {
-      background: var(--error);
-    }
+    .status-pending { color: var(--warning); font-weight: 600; }
+    .status-completed { color: var(--success); font-weight: 600; }
+    .status-partial { color: #f59e0b; font-weight: 600; }
+    .status-failed { color: var(--error); font-weight: 600; }
 
-    .legend-dot.status-pending {
-      background: var(--warning);
-    }
+    .legend-dot.status-completed { background: var(--success); }
+    .legend-dot.status-partial { background: #f59e0b; }
+    .legend-dot.status-failed { background: var(--error); }
+    .legend-dot.status-pending { background: var(--warning); }
 
-    .rating-panel {
-      margin-top: var(--spacing-lg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: var(--spacing-lg);
-      background: var(--bg-primary);
-      box-shadow: var(--shadow-sm);
-    }
-
-    .rating-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--spacing-md);
-      margin-bottom: var(--spacing-lg);
-    }
-
-    .panel-section {
-      border-top: 1px solid var(--border);
-      padding-top: var(--spacing-md);
-      margin-top: var(--spacing-md);
-    }
-
-    .panel-title {
-      font-weight: 600;
-      margin-bottom: var(--spacing-sm);
-    }
-
-    .rating-actions {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: var(--spacing-md);
-    }
-
-    @media (max-width: 960px) {
+    @media (max-width: 1200px) {
       .editor-layout {
         grid-template-columns: 1fr;
       }
@@ -379,240 +635,235 @@
       .save-panel {
         position: static;
       }
-
-      .rating-header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-    }
-
-    .no-history {
-      text-align: center;
-      padding: var(--spacing-xl);
-      color: var(--text-secondary);
     }
   </style>
 </head>
 <body>
   <div class="editor-container">
-    <header class="header">
-      <div class="header-content">
-        <h1>Editor de Datos</h1>
-        <p class="subtitle">Actualiza el estado de tus impresiones</p>
+    <!-- Header -->
+    <div class="editor-header">
+      <div class="editor-title">
+        <h1>📝 Editor de Impresiones</h1>
       </div>
-      <a href="index.html" class="btn-secondary" style="text-decoration: none; display: inline-block;">
-        Ver Dashboard
-      </a>
-    </header>
+      <div class="quick-actions">
+        <button class="config-pill" onclick="toggleConfig()">
+          ⚙️ Configuración
+        </button>
+        <a href="index.html" class="btn-secondary">
+          📊 Ver Dashboard
+        </a>
+      </div>
+    </div>
 
-    <div class="editor-layout">
-      <div class="editor-column">
-        <!-- Configuración del Proyecto -->
-        <section class="card">
-          <div class="section-header">
-            <span class="step-pill">1</span>
-            <h2 class="section-title">Configuración del Proyecto</h2>
-          </div>
-          <form id="form-project-config">
-            <div class="form-row">
-              <div class="form-group">
-                <label for="project-name">Nombre del proyecto</label>
-                <input type="text" id="project-name" required>
-              </div>
-            </div>
+    <!-- Config Modal -->
+    <div class="config-modal" id="config-modal" onclick="closeConfigIfOutside(event)">
+      <div class="config-content" onclick="event.stopPropagation()">
+        <div class="config-header">
+          <h2>⚙️ Configuración del Proyecto</h2>
+          <button class="close-config" onclick="toggleConfig()">×</button>
+        </div>
 
-            <div class="form-row">
-              <div class="form-group">
-                <label for="start-date-project">Fecha de inicio real</label>
-                <input type="date" id="start-date-project" required>
-              </div>
-
-              <div class="form-group">
-                <label for="target-end-date">Fecha de término pactada</label>
-                <input type="date" id="target-end-date" required>
-              </div>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label for="goal-pocillos">Meta de pocillos</label>
-                <input type="number" id="goal-pocillos" min="1" required>
-              </div>
-
-              <div class="form-group">
-                <label for="goal-charolas">Meta de charolas</label>
-                <input type="number" id="goal-charolas" min="1" required>
-              </div>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label for="work-hours">Horas de trabajo por día</label>
-                <input type="number" id="work-hours" min="1" max="24" required placeholder="18">
-              </div>
-            </div>
-
-            <button type="submit" class="btn-primary">Actualizar Configuración</button>
-          </form>
-        </section>
-
-        <!-- Estado Actual -->
-        <section class="card">
-          <div class="section-header">
-            <span class="step-pill">2</span>
-            <h2 class="section-title">Estado Actual</h2>
-          </div>
-          <div class="current-status-box" id="current-status-display">
-            <!-- Actualizado dinámicamente -->
+        <form id="form-project-config">
+          <div class="form-group">
+            <label for="project-name">Nombre del proyecto</label>
+            <input type="text" id="project-name" required>
           </div>
 
-          <form id="form-current-print">
+          <div class="form-row">
             <div class="form-group">
-              <label>
-                <input type="checkbox" id="is-active">
-                Hay una impresión en curso
-              </label>
+              <label for="start-date-project">Fecha de inicio</label>
+              <input type="date" id="start-date-project" required>
             </div>
 
-            <div id="print-details" class="hidden">
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="item-type">Tipo de ítem</label>
-                  <select id="item-type">
-                    <option value="">Seleccionar...</option>
-                    <option value="pocillos">Pocillos</option>
-                    <option value="charolas">Charolas</option>
-                  </select>
-                </div>
+            <div class="form-group">
+              <label for="target-end-date">Fecha de término</label>
+              <input type="date" id="target-end-date" required>
+            </div>
+          </div>
 
-                <div class="form-group">
-                  <label for="batch-size">Tamaño del lote</label>
-                  <input type="number" id="batch-size" min="1" placeholder="4">
-                </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="goal-pocillos">Meta de pocillos</label>
+              <input type="number" id="goal-pocillos" min="1" required>
+            </div>
+
+            <div class="form-group">
+              <label for="goal-charolas">Meta de charolas</label>
+              <input type="number" id="goal-charolas" min="1" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="work-hours">Horas de trabajo por día</label>
+            <input type="number" id="work-hours" min="1" max="24" required placeholder="18">
+          </div>
+
+          <button type="submit" class="btn-primary">Guardar Configuración</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Main Layout -->
+    <div class="editor-layout">
+      <!-- Left Column - Main Content -->
+      <div>
+        <!-- Estado Actual -->
+        <div class="status-card">
+          <div class="status-display" id="status-display">
+            <div class="status-dot inactive"></div>
+            <span>Cargando...</span>
+          </div>
+
+          <div class="status-toggle" onclick="toggleStatusForm()">
+            <div class="toggle-switch" id="status-toggle">
+              <div class="toggle-slider"></div>
+            </div>
+            <span>Hay una impresión en curso</span>
+          </div>
+
+          <form class="status-form" id="status-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="item-type">Tipo de ítem</label>
+                <select id="item-type">
+                  <option value="">Seleccionar...</option>
+                  <option value="pocillos">Pocillos</option>
+                  <option value="charolas">Charolas</option>
+                </select>
               </div>
 
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="start-time">Fecha y hora de inicio</label>
-                  <input type="datetime-local" id="start-time">
-                </div>
-
-                <div class="form-group">
-                  <label for="estimated-duration">Duración estimada (minutos)</label>
-                  <input type="number" id="estimated-duration" min="1" placeholder="180">
-                </div>
+              <div class="form-group">
+                <label for="batch-size">Tamaño del lote</label>
+                <input type="number" id="batch-size" min="1" placeholder="9">
               </div>
             </div>
 
-            <button type="submit" class="btn-primary">Actualizar Estado Actual</button>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="start-time">Fecha y hora de inicio</label>
+                <input type="datetime-local" id="start-time">
+              </div>
+
+              <div class="form-group">
+                <label for="estimated-duration">Duración estimada (min)</label>
+                <input type="number" id="estimated-duration" min="1" placeholder="640">
+              </div>
+            </div>
+
+            <button type="submit" class="btn-primary">Actualizar Estado</button>
           </form>
-        </section>
+        </div>
+
+        <!-- Tabla de Impresiones -->
+        <div class="prints-card">
+          <div class="prints-header">
+            <h2>📋 Registro de Impresiones</h2>
+            <button class="add-print-btn" onclick="addHistoryItem()">
+              <span>+</span> Nueva Impresión
+            </button>
+          </div>
+
+          <div class="legend">
+            <span class="legend-item">
+              <span class="legend-dot status-completed"></span>
+              Exitosa
+            </span>
+            <span class="legend-item">
+              <span class="legend-dot status-partial"></span>
+              Parcial
+            </span>
+            <span class="legend-item">
+              <span class="legend-dot status-failed"></span>
+              Fallida
+            </span>
+            <span class="legend-item">
+              <span class="legend-dot status-pending"></span>
+              Pendiente
+            </span>
+          </div>
+
+          <div class="table-container">
+            <div id="history-management">
+              <!-- Renderizado dinámicamente -->
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="editor-column">
-        <!-- Visualizador de Impresiones -->
-        <section class="card">
-          <div class="section-header">
-            <span class="step-pill">3</span>
-            <h2 class="section-title">Impresiones Registradas</h2>
-          </div>
-          <p class="text-muted" style="margin-bottom: var(--spacing-lg);">
-            Califica cada impresión y registra cuántas piezas salieron bien.
-          </p>
-          <div class="history-toolbar">
-            <button type="button" class="btn-secondary" onclick="addHistoryItem()">+ Agregar impresión</button>
-            <div class="legend">
-              <span class="legend-item"><span class="legend-dot status-completed"></span>Exitosa</span>
-              <span class="legend-item"><span class="legend-dot status-partial"></span>Parcial</span>
-              <span class="legend-item"><span class="legend-dot status-failed"></span>Fallida</span>
-              <span class="legend-item"><span class="legend-dot status-pending"></span>Pendiente</span>
-            </div>
-          </div>
-
-          <div id="history-management">
-            <!-- Renderizado dinámicamente -->
-          </div>
-
-          <div id="rating-panel" class="rating-panel hidden">
-            <div class="rating-header">
-              <div>
-                <h3>Calificar impresión <span id="rating-id"></span></h3>
-                <div class="helper-text" id="rating-meta"></div>
-              </div>
-              <button type="button" class="btn-secondary" onclick="closeRatingPanel()">Cerrar</button>
-            </div>
-
-            <form id="form-rate">
-              <div class="panel-section">
-                <div class="panel-title">Datos de impresión</div>
-                <div class="form-row">
-                  <div class="form-group">
-                    <label for="rate-date">Fecha</label>
-                    <input type="date" id="rate-date" required>
-                  </div>
-                  <div class="form-group">
-                    <label for="rate-item">Tipo de ítem</label>
-                    <select id="rate-item" required>
-                      <option value="pocillos">Pocillos</option>
-                      <option value="charolas">Charolas</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="form-row">
-                  <div class="form-group">
-                    <label for="rate-batch">Tamaño del lote</label>
-                    <input type="number" id="rate-batch" min="1" required>
-                  </div>
-                  <div class="form-group">
-                    <label for="rate-duration">Duración (minutos)</label>
-                    <input type="number" id="rate-duration" min="0">
-                  </div>
-                </div>
-              </div>
-
-              <div class="panel-section">
-                <div class="panel-title">Calificación</div>
-                <div class="form-row">
-                  <div class="form-group">
-                    <label for="rate-status">Resultado</label>
-                    <select id="rate-status" required>
-                      <option value="pending">⏳ Pendiente</option>
-                      <option value="completed">✓ Exitosa</option>
-                      <option value="partial">⚠️ Parcial</option>
-                      <option value="failed">✗ Fallida</option>
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <label for="rate-good">Piezas buenas</label>
-                    <input type="number" id="rate-good" min="0">
-                    <div class="helper-text" id="rate-good-hint">Rango: 0 - 0</div>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="rate-notes">Notas</label>
-                  <textarea id="rate-notes" placeholder="Detalles del resultado"></textarea>
-                </div>
-              </div>
-
-              <div class="rating-actions">
-                <button type="submit" class="btn-primary">Guardar calificación</button>
-              </div>
-            </form>
-          </div>
-        </section>
-
-        <!-- Guardar y Publicar -->
-        <section class="card save-panel">
-          <div class="section-header">
-            <span class="step-pill">4</span>
-            <h2 class="section-title">Guardar y Publicar</h2>
-          </div>
-          <p>Guarda los cambios y actualiza el dashboard en GitHub Pages.</p>
-          <button onclick="saveAndPush()" id="btn-save" class="btn-primary">
-            💾 Guardar y Subir a GitHub
+      <!-- Right Column - Sidebar -->
+      <div>
+        <div class="save-panel">
+          <h3>💾 Guardar Cambios</h3>
+          <p>Publica los cambios en GitHub Pages</p>
+          <button class="btn-save" id="btn-save" onclick="saveAndPush()">
+            Guardar y Publicar
           </button>
           <div id="save-status" class="save-status"></div>
-        </section>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rating Modal -->
+    <div class="rating-modal" id="rating-modal" onclick="closeRatingIfOutside(event)">
+      <div class="rating-content" onclick="event.stopPropagation()">
+        <div class="rating-header">
+          <div>
+            <h3>Calificar impresión <span id="rating-id"></span></h3>
+            <div class="rating-meta" id="rating-meta"></div>
+          </div>
+          <button class="close-config" onclick="closeRatingPanel()">×</button>
+        </div>
+
+        <form id="form-rate">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="rate-date">Fecha</label>
+              <input type="date" id="rate-date" required>
+            </div>
+            <div class="form-group">
+              <label for="rate-item">Tipo de ítem</label>
+              <select id="rate-item" required>
+                <option value="pocillos">Pocillos</option>
+                <option value="charolas">Charolas</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="rate-batch">Tamaño del lote</label>
+              <input type="number" id="rate-batch" min="1" required>
+            </div>
+            <div class="form-group">
+              <label for="rate-duration">Duración (minutos)</label>
+              <input type="number" id="rate-duration" min="0">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="rate-status">Resultado</label>
+              <select id="rate-status" required>
+                <option value="pending">⏳ Pendiente</option>
+                <option value="completed">✓ Exitosa</option>
+                <option value="partial">⚠️ Parcial</option>
+                <option value="failed">✗ Fallida</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="rate-good">Piezas buenas</label>
+              <input type="number" id="rate-good" min="0">
+              <div class="helper-text" id="rate-good-hint">Rango: 0 - 0</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="rate-notes">Notas</label>
+            <textarea id="rate-notes" placeholder="Detalles del resultado (opcional)"></textarea>
+          </div>
+
+          <button type="submit" class="btn-primary">Guardar Calificación</button>
+        </form>
       </div>
     </div>
   </div>
@@ -620,14 +871,36 @@
   <script src="js/dataLoader.js"></script>
   <script>
     let currentData = null;
+    let editingId = null;
 
-    // Cargar datos al iniciar
+    // Toggle Config Modal
+    function toggleConfig() {
+      const modal = document.getElementById('config-modal');
+      const pill = document.querySelector('.config-pill');
+      modal.classList.toggle('active');
+      pill.classList.toggle('active');
+    }
+
+    function closeConfigIfOutside(e) {
+      if (e.target === document.getElementById('config-modal')) {
+        toggleConfig();
+      }
+    }
+
+    // Toggle Status Form
+    function toggleStatusForm() {
+      const form = document.getElementById('status-form');
+      const toggle = document.getElementById('status-toggle');
+      const isActive = toggle.classList.toggle('active');
+      form.classList.toggle('active', isActive);
+    }
+
+    // Cargar datos
     async function loadData() {
       try {
         currentData = await DataLoader.load('data/print-data.json');
       } catch (error) {
         console.error('Error cargando datos:', error);
-        alert('Error al cargar datos. Usando datos vacíos.');
         currentData = {
           meta: {
             projectName: "Proyecto Pensión Valdés",
@@ -648,38 +921,38 @@
         };
       }
 
-      updateCurrentStatusDisplay();
+      updateStatusDisplay();
       loadProjectConfig();
       loadCurrentPrintForm();
     }
 
-    // Actualizar display del estado actual
-    function updateCurrentStatusDisplay() {
-      const display = document.getElementById('current-status-display');
+    // Actualizar display del estado
+    function updateStatusDisplay() {
+      const display = document.getElementById('status-display');
+      const toggle = document.getElementById('status-toggle');
+      const form = document.getElementById('status-form');
       const isActive = currentData.currentPrint.isActive;
 
       if (isActive) {
         display.innerHTML = `
-          <span class="status-indicator status-active"></span>
-          <strong>FUNCIONANDO</strong> - Imprimiendo ${currentData.currentPrint.batchSize}
-          ${currentData.currentPrint.item} (estimado: ${currentData.currentPrint.estimatedDuration} min)
+          <div class="status-dot active"></div>
+          <span>Imprimiendo ${currentData.currentPrint.batchSize} ${currentData.currentPrint.item}</span>
         `;
+        toggle.classList.add('active');
+        form.classList.add('active');
       } else {
         display.innerHTML = `
-          <span class="status-indicator status-inactive"></span>
-          <strong>EN REPOSO</strong> - No hay impresión activa
+          <div class="status-dot inactive"></div>
+          <span>Sin impresión activa</span>
         `;
+        toggle.classList.remove('active');
+        form.classList.remove('active');
       }
     }
 
-    // Cargar estado actual en el formulario
+    // Cargar estado actual en formulario
     function loadCurrentPrintForm() {
       const isActive = currentData.currentPrint.isActive;
-      const isActiveInput = document.getElementById('is-active');
-      const details = document.getElementById('print-details');
-
-      isActiveInput.checked = isActive;
-      details.classList.toggle('hidden', !isActive);
 
       if (isActive) {
         document.getElementById('item-type').value = currentData.currentPrint.item || '';
@@ -697,44 +970,35 @@
       }
     }
 
-    // Cargar configuración del proyecto en el formulario
+    // Cargar configuración
     function loadProjectConfig() {
       document.getElementById('project-name').value = currentData.meta.projectName || '';
       document.getElementById('start-date-project').value = currentData.meta.startDate || '';
       document.getElementById('target-end-date').value = currentData.meta.targetEndDate || '';
       document.getElementById('goal-pocillos').value = currentData.meta.goals.pocillos || 100;
       document.getElementById('goal-charolas').value = currentData.meta.goals.charolas || 20;
-      const workHours = currentData.meta.workHoursPerDay || 18;
-      currentData.meta.workHoursPerDay = workHours;
-      document.getElementById('work-hours').value = workHours;
+      document.getElementById('work-hours').value = currentData.meta.workHoursPerDay || 18;
     }
 
-    // Form: Actualizar configuración del proyecto
+    // Form: Config
     document.getElementById('form-project-config').addEventListener('submit', (e) => {
       e.preventDefault();
-
       currentData.meta.projectName = document.getElementById('project-name').value;
       currentData.meta.startDate = document.getElementById('start-date-project').value;
       currentData.meta.targetEndDate = document.getElementById('target-end-date').value;
       currentData.meta.goals.pocillos = parseInt(document.getElementById('goal-pocillos').value);
       currentData.meta.goals.charolas = parseInt(document.getElementById('goal-charolas').value);
       currentData.meta.workHoursPerDay = parseInt(document.getElementById('work-hours').value);
-
-      alert('Configuración actualizada. Click en "Guardar y Subir a GitHub" para publicar.');
+      toggleConfig();
+      alert('✅ Configuración guardada. No olvides publicar los cambios.');
     });
 
-    // Toggle detalles de impresión
-    document.getElementById('is-active').addEventListener('change', (e) => {
-      const details = document.getElementById('print-details');
-      details.classList.toggle('hidden', !e.target.checked);
-    });
-
-    // Form: Actualizar estado actual
-    document.getElementById('form-current-print').addEventListener('submit', (e) => {
+    // Form: Status
+    document.getElementById('status-form').addEventListener('submit', (e) => {
       e.preventDefault();
 
-      const previousPrint = { ...currentData.currentPrint };
-      const isActive = document.getElementById('is-active').checked;
+      const toggle = document.getElementById('status-toggle');
+      const isActive = toggle.classList.contains('active');
 
       if (isActive) {
         const itemType = document.getElementById('item-type').value;
@@ -743,7 +1007,7 @@
         const estimatedDuration = parseInt(document.getElementById('estimated-duration').value);
 
         if (!itemType || !batchSize || !startTime || !estimatedDuration) {
-          alert('Por favor completa todos los campos');
+          alert('⚠️ Completa todos los campos');
           return;
         }
 
@@ -764,15 +1028,12 @@
         };
       }
 
-      updateCurrentStatusDisplay();
-      if (currentData.currentPrint.isActive) {
-        syncCurrentPrintToHistory(previousPrint);
-      }
+      updateStatusDisplay();
       renderHistoryTable();
-      alert('Estado actual actualizado. Click en "Guardar y Subir a GitHub" para publicar.');
+      alert('✅ Estado actualizado. No olvides publicar los cambios.');
     });
 
-    // Agregar impresión al historial
+    // Agregar impresión
     function addHistoryItem() {
       if (!currentData) return;
 
@@ -801,135 +1062,16 @@
       openRatingPanel(newId);
     }
 
-    function syncCurrentPrintToHistory(previousPrint) {
-      const currentPrint = currentData.currentPrint;
-      if (!currentPrint.isActive) return;
-
-      const currentStartTime = currentPrint.startTime;
-      const existingIndex = currentData.history.findIndex(
-        (h) => h.startTime && h.startTime === currentStartTime
-      );
-
-      if (existingIndex !== -1) {
-        const existing = currentData.history[existingIndex];
-        if (existing.status !== 'pending') return;
-
-        currentData.history[existingIndex] = {
-          ...existing,
-          date: currentStartTime.split('T')[0],
-          item: currentPrint.item,
-          batchSize: currentPrint.batchSize,
-          duration: existing.duration || 0,
-          status: 'pending',
-          startTime: currentStartTime,
-          source: existing.source || 'currentPrint'
-        };
-        return;
-      }
-
-      const previousStartTime = previousPrint && previousPrint.startTime;
-      if (previousStartTime && previousStartTime !== currentStartTime) {
-        const previousIndex = currentData.history.findIndex(
-          (h) => h.startTime && h.startTime === previousStartTime && h.status === 'pending'
-        );
-        if (previousIndex !== -1) {
-          const existing = currentData.history[previousIndex];
-          currentData.history[previousIndex] = {
-            ...existing,
-            date: currentStartTime.split('T')[0],
-            item: currentPrint.item,
-            batchSize: currentPrint.batchSize,
-            duration: existing.duration || 0,
-            status: 'pending',
-            startTime: currentStartTime,
-            source: existing.source || 'currentPrint'
-          };
-          return;
-        }
-      }
-
-      const newId = currentData.history.length > 0
-        ? Math.max(...currentData.history.map(h => h.id)) + 1
-        : 1;
-
-      currentData.history.push({
-        id: newId,
-        date: currentStartTime.split('T')[0],
-        item: currentPrint.item,
-        batchSize: currentPrint.batchSize,
-        duration: 0,
-        status: 'pending',
-        goodCount: 0,
-        notes: '',
-        startTime: currentStartTime,
-        source: 'currentPrint'
-      });
-    }
-
-    // Guardar y hacer push a GitHub
-    async function saveAndPush() {
-      const btn = document.getElementById('btn-save');
-      const status = document.getElementById('save-status');
-
-      btn.disabled = true;
-      btn.textContent = '⏳ Guardando...';
-      status.textContent = '';
-
-      try {
-        // 1. Guardar archivo
-        const saveResponse = await fetch('/api/save', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(currentData)
-        });
-
-        const saveData = await saveResponse.json();
-
-        if (!saveData.success) {
-          throw new Error(saveData.error || 'Error al guardar');
-        }
-
-        status.innerHTML = '✅ Archivo guardado<br>';
-        btn.textContent = '📤 Subiendo a GitHub...';
-
-        // 2. Git push
-        const pushResponse = await fetch('/api/git-push', {
-          method: 'POST'
-        });
-
-        const pushData = await pushResponse.json();
-
-        if (!pushData.success) {
-          throw new Error(pushData.error || 'Error en git push');
-        }
-
-        status.innerHTML += '✅ Cambios subidos a GitHub<br><br>🎉 ¡Dashboard actualizado! Visita:<br><a href="https://ortegamatias.github.io/PensionValdes/" target="_blank">https://ortegamatias.github.io/PensionValdes/</a>';
-        btn.textContent = '✅ Completado';
-
-        setTimeout(() => {
-          btn.textContent = '💾 Guardar y Subir a GitHub';
-          btn.disabled = false;
-        }, 3000);
-
-      } catch (error) {
-        console.error('Error:', error);
-        status.innerHTML = `❌ Error: ${error.message}`;
-        btn.textContent = '❌ Error - Reintentar';
-        btn.disabled = false;
-      }
-    }
-
-    // Renderizar tabla de historial
+    // Renderizar tabla
     function renderHistoryTable() {
       const container = document.getElementById('history-management');
       if (!container) return;
 
       if (!currentData.history || currentData.history.length === 0) {
-        container.innerHTML = '<div class="no-history">No hay impresiones en el historial</div>';
+        container.innerHTML = '<div class="no-history">📭 No hay impresiones registradas<br><br>Haz click en "+ Nueva Impresión" para comenzar</div>';
         return;
       }
 
-      // Ordenar por ID (más reciente primero)
       const sorted = [...currentData.history].sort((a, b) => b.id - a.id);
 
       const rows = sorted.map(h => {
@@ -939,7 +1081,7 @@
           'partial': '<span class="status-partial">⚠️ Parcial</span>',
           'failed': '<span class="status-failed">✗ Fallida</span>'
         };
-        const statusBadge = statusLabels[h.status] || '<span class="status-pending">⏳ Pendiente</span>';
+        const statusBadge = statusLabels[h.status] || statusLabels.pending;
         const hasGoodCount = Number.isFinite(h.goodCount);
         const goodCountDisplay = hasGoodCount
           ? h.goodCount
@@ -947,50 +1089,48 @@
         const durationDisplay = h.duration > 0 ? `${h.duration} min` : '--';
 
         return `
-          <tr id="row-${h.id}" class="${h.status === 'pending' ? 'row-pending' : ''}">
-            <td>#${h.id}</td>
+          <tr class="${h.status === 'pending' ? 'row-pending' : ''}">
+            <td><strong>#${h.id}</strong></td>
             <td>${h.date}</td>
             <td>${h.item === 'pocillos' ? 'Pocillos' : 'Charolas'}</td>
             <td>${h.batchSize}</td>
             <td>${goodCountDisplay}</td>
             <td>${durationDisplay}</td>
             <td>${statusBadge}</td>
-            <td>${h.notes || '--'}</td>
-            <td>
-              <button class="btn-small btn-edit" onclick="openRatingPanel(${h.id})">✅ Calificar</button>
-              <button class="btn-small btn-delete" onclick="deleteHistoryItem(${h.id})">🗑️ Eliminar</button>
+            <td style="white-space: nowrap;">
+              <button class="btn-rate" onclick="openRatingPanel(${h.id})">
+                ✏️ Editar
+              </button>
+              <button class="btn-delete" onclick="deleteHistoryItem(${h.id})" title="Eliminar">
+                🗑️
+              </button>
             </td>
           </tr>
         `;
       }).join('');
 
       container.innerHTML = `
-        <div class="table-scroll">
-          <table class="history-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Fecha</th>
-                <th>Ítem</th>
-                <th>Lote</th>
-                <th>Buenas</th>
-                <th>Duración</th>
-                <th>Estado</th>
-                <th>Notas</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${rows}
-            </tbody>
-          </table>
-        </div>
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Fecha</th>
+              <th>Ítem</th>
+              <th>Lote</th>
+              <th>Buenas</th>
+              <th>Duración</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows}
+          </tbody>
+        </table>
       `;
     }
 
-    // Panel de calificación
-    let editingId = null;
-
+    // Rating Panel
     function openRatingPanel(id) {
       const item = currentData.history.find(h => h.id === id);
       if (!item) return;
@@ -999,7 +1139,7 @@
 
       const itemLabel = item.item === 'charolas' ? 'Charolas' : 'Pocillos';
       document.getElementById('rating-id').textContent = `#${id}`;
-      document.getElementById('rating-meta').textContent = `${itemLabel} · Lote ${item.batchSize}`;
+      document.getElementById('rating-meta').textContent = `${itemLabel} · Lote de ${item.batchSize}`;
 
       document.getElementById('rate-date').value = item.date || new Date().toISOString().split('T')[0];
       document.getElementById('rate-item').value = item.item || 'pocillos';
@@ -1014,12 +1154,18 @@
       document.getElementById('rate-notes').value = item.notes || '';
 
       updateGoodHint();
-      document.getElementById('rating-panel').classList.remove('hidden');
+      document.getElementById('rating-modal').classList.add('active');
     }
 
     function closeRatingPanel() {
       editingId = null;
-      document.getElementById('rating-panel').classList.add('hidden');
+      document.getElementById('rating-modal').classList.remove('active');
+    }
+
+    function closeRatingIfOutside(e) {
+      if (e.target === document.getElementById('rating-modal')) {
+        closeRatingPanel();
+      }
     }
 
     function updateGoodHint() {
@@ -1088,19 +1234,15 @@
       };
 
       renderHistoryTable();
-      openRatingPanel(editingId);
-      alert('Calificación guardada. No olvides hacer click en "Guardar y Subir a GitHub".');
+      closeRatingPanel();
+      alert('✅ Calificación guardada. No olvides publicar los cambios.');
     });
 
-    // Eliminar entrada del historial
+    // Eliminar
     function deleteHistoryItem(id) {
-      if (!confirm(`¿Seguro que quieres eliminar la impresión #${id}?`)) {
-        return;
-      }
+      if (!confirm(`¿Eliminar impresión #${id}?`)) return;
 
       currentData.history = currentData.history.filter(h => h.id !== id);
-
-      // También eliminar issues relacionados
       currentData.issues = currentData.issues.filter(i => i.printId !== id);
 
       if (editingId === id) {
@@ -1108,20 +1250,59 @@
       }
 
       renderHistoryTable();
-      alert('Entrada eliminada. No olvides hacer click en "Guardar y Subir a GitHub".');
+      alert('✅ Entrada eliminada. No olvides publicar los cambios.');
     }
 
-    // Inicializar
+    // Guardar y Push
+    async function saveAndPush() {
+      const btn = document.getElementById('btn-save');
+      const status = document.getElementById('save-status');
+
+      btn.disabled = true;
+      btn.textContent = '⏳ Guardando...';
+      status.textContent = '';
+
+      try {
+        const saveResponse = await fetch('/api/save', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(currentData)
+        });
+
+        const saveData = await saveResponse.json();
+        if (!saveData.success) throw new Error(saveData.error || 'Error al guardar');
+
+        status.innerHTML = '✅ Archivo guardado<br>';
+        btn.textContent = '📤 Subiendo a GitHub...';
+
+        const pushResponse = await fetch('/api/git-push', { method: 'POST' });
+        const pushData = await pushResponse.json();
+        if (!pushData.success) throw new Error(pushData.error || 'Error en git push');
+
+        status.innerHTML += '✅ Cambios publicados<br><br>🎉 Dashboard actualizado en:<br><a href="https://ortegamatias.github.io/PensionValdes/" target="_blank">Ver Dashboard →</a>';
+        btn.textContent = '✅ Completado';
+
+        setTimeout(() => {
+          btn.textContent = 'Guardar y Publicar';
+          btn.disabled = false;
+          status.innerHTML = '';
+        }, 5000);
+
+      } catch (error) {
+        console.error('Error:', error);
+        status.innerHTML = `❌ Error: ${error.message}`;
+        btn.textContent = '❌ Error - Reintentar';
+        btn.disabled = false;
+      }
+    }
+
+    // Init
     async function init() {
       await loadData();
-      if (currentData && currentData.currentPrint && currentData.currentPrint.isActive) {
-        syncCurrentPrintToHistory();
-      }
       renderHistoryTable();
     }
 
     init();
-
   </script>
 </body>
 </html>
