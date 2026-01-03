@@ -5,7 +5,8 @@
       "pocillos": 100,
       "charolas": 20
     },
-    "startDate": "2026-01-03"
+    "startDate": "2026-01-03",
+    "targetEndDate": "2026-02-15"
   },
   "currentPrint": {
     "isActive": false,

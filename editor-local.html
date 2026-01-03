@@ -234,6 +234,47 @@
       </a>
     </header>
 
+    <!-- Configuración del Proyecto -->
+    <section class="card">
+      <h2 class="section-title">Configuración del Proyecto</h2>
+      <form id="form-project-config">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="project-name">Nombre del proyecto</label>
+            <input type="text" id="project-name" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="start-date-project">Fecha de inicio real</label>
+            <input type="date" id="start-date-project" required>
+          </div>
+
+          <div class="form-group">
+            <label for="target-end-date">Fecha de término pactada</label>
+            <input type="date" id="target-end-date" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="goal-pocillos">Meta de pocillos</label>
+            <input type="number" id="goal-pocillos" min="1" required>
+          </div>
+
+          <div class="form-group">
+            <label for="goal-charolas">Meta de charolas</label>
+            <input type="number" id="goal-charolas" min="1" required>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary">Actualizar Configuración</button>
+      </form>
+    </section>
+
+    <hr class="section-divider">
+
     <!-- Estado Actual -->
     <section class="card">
       <h2 class="section-title">Estado Actual</h2>
@@ -421,6 +462,7 @@
       try {
         currentData = await DataLoader.load('data/print-data.json');
         updateCurrentStatusDisplay();
+        loadProjectConfig();
       } catch (error) {
         console.error('Error cargando datos:', error);
         alert('Error al cargar datos. Usando datos vacíos.');
@@ -428,7 +470,8 @@
           meta: {
             projectName: "Proyecto Pensión Valdés",
             goals: { pocillos: 100, charolas: 20 },
-            startDate: new Date().toISOString().split('T')[0]
+            startDate: new Date().toISOString().split('T')[0],
+            targetEndDate: ""
           },
           currentPrint: {
             isActive: false,
@@ -461,6 +504,28 @@
         `;
       }
     }
+
+    // Cargar configuración del proyecto en el formulario
+    function loadProjectConfig() {
+      document.getElementById('project-name').value = currentData.meta.projectName || '';
+      document.getElementById('start-date-project').value = currentData.meta.startDate || '';
+      document.getElementById('target-end-date').value = currentData.meta.targetEndDate || '';
+      document.getElementById('goal-pocillos').value = currentData.meta.goals.pocillos || 100;
+      document.getElementById('goal-charolas').value = currentData.meta.goals.charolas || 20;
+    }
+
+    // Form: Actualizar configuración del proyecto
+    document.getElementById('form-project-config').addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      currentData.meta.projectName = document.getElementById('project-name').value;
+      currentData.meta.startDate = document.getElementById('start-date-project').value;
+      currentData.meta.targetEndDate = document.getElementById('target-end-date').value;
+      currentData.meta.goals.pocillos = parseInt(document.getElementById('goal-pocillos').value);
+      currentData.meta.goals.charolas = parseInt(document.getElementById('goal-charolas').value);
+
+      alert('Configuración actualizada. Click en "Guardar y Subir a GitHub" para publicar.');
+    });
 
     // Toggle detalles de impresión
     document.getElementById('is-active').addEventListener('change', (e) => {

@@ -208,6 +208,71 @@ class Calculator {
   }
 
   /**
+   * Comparar progreso real vs. progreso esperado según fecha pactada
+   * @returns {object} Información de comparación temporal
+   */
+  getScheduleComparison() {
+    if (!this.data.meta.startDate || !this.data.meta.targetEndDate) {
+      return null;
+    }
+
+    const startDate = new Date(this.data.meta.startDate);
+    const targetDate = new Date(this.data.meta.targetEndDate);
+    const today = new Date();
+
+    // Días totales del proyecto
+    const totalDays = Math.ceil((targetDate - startDate) / (1000 * 60 * 60 * 24));
+
+    // Días transcurridos
+    const daysElapsed = Math.max(0, Math.ceil((today - startDate) / (1000 * 60 * 60 * 24)));
+
+    // Días restantes hasta la fecha pactada
+    const daysRemaining = Math.max(0, Math.ceil((targetDate - today) / (1000 * 60 * 60 * 24)));
+
+    // Porcentaje temporal esperado
+    const expectedTimeProgress = totalDays > 0 ? Math.min(100, (daysElapsed / totalDays) * 100) : 0;
+
+    // Progreso real (piezas)
+    const progress = this.getProgress();
+    const totalGoal = this.data.meta.goals.pocillos + this.data.meta.goals.charolas;
+    const totalCompleted = progress.pocillos + progress.charolas;
+    const actualProgress = totalGoal > 0 ? (totalCompleted / totalGoal) * 100 : 0;
+
+    // Diferencia: positivo = adelantados, negativo = atrasados
+    const progressDifference = actualProgress - expectedTimeProgress;
+
+    // Estado del proyecto
+    let status = 'on-track';
+    if (progressDifference > 10) {
+      status = 'ahead';
+    } else if (progressDifference < -10) {
+      status = 'behind';
+    }
+
+    // Calcular si llegarán a tiempo
+    const estimation = this.getEstimatedCompletion();
+    const willFinishOnTime = estimation.date <= targetDate;
+
+    // Días de adelanto/atraso estimado
+    const daysDifference = Math.ceil((estimation.date - targetDate) / (1000 * 60 * 60 * 24));
+
+    return {
+      startDate: startDate,
+      targetDate: targetDate,
+      totalDays: totalDays,
+      daysElapsed: daysElapsed,
+      daysRemaining: daysRemaining,
+      expectedTimeProgress: Math.round(expectedTimeProgress),
+      actualProgress: Math.round(actualProgress),
+      progressDifference: Math.round(progressDifference),
+      status: status,
+      willFinishOnTime: willFinishOnTime,
+      daysDifference: daysDifference,
+      estimatedDate: estimation.date
+    };
+  }
+
+  /**
    * Calcular estadísticas generales
    * @returns {object} Estadísticas del proyecto
    */
