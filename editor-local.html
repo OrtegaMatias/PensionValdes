@@ -197,6 +197,26 @@
       opacity: 0.8;
     }
 
+    .status-pending {
+      color: var(--warning);
+      font-weight: 600;
+    }
+
+    .status-completed {
+      color: var(--success);
+      font-weight: 600;
+    }
+
+    .status-partial {
+      color: #f59e0b;
+      font-weight: 600;
+    }
+
+    .status-failed {
+      color: var(--error);
+      font-weight: 600;
+    }
+
     .edit-row {
       background: #fef3c7 !important;
     }
@@ -326,18 +346,18 @@
 
     <hr class="section-divider">
 
-    <!-- Completar Impresión -->
+    <!-- Registrar Impresión -->
     <section class="card">
-      <h2 class="section-title">Completar Impresión</h2>
+      <h2 class="section-title">Registrar Impresión</h2>
       <p class="text-muted" style="margin-bottom: var(--spacing-lg);">
-        Registra una impresión que terminó exitosamente
+        Registra una impresión realizada. Luego podrás clasificar el resultado en la tabla de historial.
       </p>
 
-      <form id="form-complete-print">
+      <form id="form-register-print">
         <div class="form-row">
           <div class="form-group">
-            <label for="complete-item">Tipo de ítem</label>
-            <select id="complete-item" required>
+            <label for="register-item">Tipo de ítem</label>
+            <select id="register-item" required>
               <option value="">Seleccionar...</option>
               <option value="pocillos">Pocillos</option>
               <option value="charolas">Charolas</option>
@@ -345,86 +365,29 @@
           </div>
 
           <div class="form-group">
-            <label for="complete-batch">Tamaño del lote</label>
-            <input type="number" id="complete-batch" min="1" required placeholder="4">
+            <label for="register-batch">Tamaño del lote</label>
+            <input type="number" id="register-batch" min="1" required placeholder="4">
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <label for="complete-date">Fecha</label>
-            <input type="date" id="complete-date" required>
+            <label for="register-date">Fecha</label>
+            <input type="date" id="register-date" required>
           </div>
 
           <div class="form-group">
-            <label for="complete-duration">Duración real (minutos)</label>
-            <input type="number" id="complete-duration" min="1" required placeholder="185">
+            <label for="register-duration">Duración (minutos)</label>
+            <input type="number" id="register-duration" min="0" required placeholder="180">
           </div>
         </div>
 
         <div class="form-group">
-          <label for="complete-notes">Notas (opcional)</label>
-          <textarea id="complete-notes" placeholder="Ej: Primera impresión exitosa"></textarea>
+          <label for="register-notes">Notas (opcional)</label>
+          <textarea id="register-notes" placeholder="Observaciones sobre la impresión"></textarea>
         </div>
 
-        <button type="submit" class="btn-primary btn-success">Agregar Impresión Completada</button>
-      </form>
-    </section>
-
-    <hr class="section-divider">
-
-    <!-- Registrar Fallo -->
-    <section class="card">
-      <h2 class="section-title">Registrar Fallo</h2>
-      <p class="text-muted" style="margin-bottom: var(--spacing-lg);">
-        Registra una impresión que falló y documenta el problema
-      </p>
-
-      <form id="form-failed-print">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="failed-item">Tipo de ítem</label>
-            <select id="failed-item" required>
-              <option value="">Seleccionar...</option>
-              <option value="pocillos">Pocillos</option>
-              <option value="charolas">Charolas</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="failed-batch">Tamaño del lote</label>
-            <input type="number" id="failed-batch" min="1" required placeholder="1">
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="failed-date">Fecha</label>
-          <input type="date" id="failed-date" required>
-        </div>
-
-        <div class="form-group">
-          <label for="issue-type">Tipo de problema</label>
-          <select id="issue-type" required>
-            <option value="">Seleccionar...</option>
-            <option value="material">Material (filamento)</option>
-            <option value="hardware">Hardware (mecánico)</option>
-            <option value="software">Software (configuración)</option>
-            <option value="adhesion">Adhesión (a la cama)</option>
-            <option value="quality">Calidad de impresión</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="issue-description">Descripción del problema</label>
-          <textarea id="issue-description" required placeholder="¿Qué salió mal?"></textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="issue-resolution">Resolución (opcional)</label>
-          <textarea id="issue-resolution" placeholder="¿Cómo lo resolviste?"></textarea>
-        </div>
-
-        <button type="submit" class="btn-primary btn-danger">Registrar Fallo</button>
+        <button type="submit" class="btn-primary">Registrar Impresión</button>
       </form>
     </section>
 
@@ -571,8 +534,8 @@
       alert('Estado actual actualizado. Click en "Guardar y Subir a GitHub" para publicar.');
     });
 
-    // Form: Completar impresión
-    document.getElementById('form-complete-print').addEventListener('submit', (e) => {
+    // Form: Registrar impresión
+    document.getElementById('form-register-print').addEventListener('submit', (e) => {
       e.preventDefault();
 
       const newId = currentData.history.length > 0
@@ -581,12 +544,12 @@
 
       const newEntry = {
         id: newId,
-        date: document.getElementById('complete-date').value,
-        item: document.getElementById('complete-item').value,
-        batchSize: parseInt(document.getElementById('complete-batch').value),
-        duration: parseInt(document.getElementById('complete-duration').value),
-        status: "completed",
-        notes: document.getElementById('complete-notes').value || ""
+        date: document.getElementById('register-date').value,
+        item: document.getElementById('register-item').value,
+        batchSize: parseInt(document.getElementById('register-batch').value),
+        duration: parseInt(document.getElementById('register-duration').value),
+        status: "pending",
+        notes: document.getElementById('register-notes').value || ""
       };
 
       currentData.history.push(newEntry);
@@ -603,61 +566,7 @@
       updateCurrentStatusDisplay();
       renderHistoryTable();
       e.target.reset();
-      alert(`Impresión #${newId} agregada exitosamente. Click en "Guardar y Subir a GitHub" para publicar.`);
-    });
-
-    // Form: Registrar fallo
-    document.getElementById('form-failed-print').addEventListener('submit', (e) => {
-      e.preventDefault();
-
-      const newHistoryId = currentData.history.length > 0
-        ? Math.max(...currentData.history.map(h => h.id)) + 1
-        : 1;
-
-      const newIssueId = currentData.issues.length > 0
-        ? Math.max(...currentData.issues.map(i => i.id)) + 1
-        : 1;
-
-      const date = document.getElementById('failed-date').value;
-
-      // Agregar al historial
-      const historyEntry = {
-        id: newHistoryId,
-        date: date,
-        item: document.getElementById('failed-item').value,
-        batchSize: parseInt(document.getElementById('failed-batch').value),
-        duration: 0,
-        status: "failed",
-        notes: document.getElementById('issue-description').value
-      };
-
-      currentData.history.push(historyEntry);
-
-      // Agregar a issues
-      const issueEntry = {
-        id: newIssueId,
-        date: date,
-        type: document.getElementById('issue-type').value,
-        description: document.getElementById('issue-description').value,
-        resolution: document.getElementById('issue-resolution').value || "",
-        printId: newHistoryId
-      };
-
-      currentData.issues.push(issueEntry);
-
-      // Desactivar currentPrint
-      currentData.currentPrint = {
-        isActive: false,
-        item: "",
-        batchSize: 0,
-        startTime: "",
-        estimatedDuration: 0
-      };
-
-      updateCurrentStatusDisplay();
-      renderHistoryTable();
-      e.target.reset();
-      alert(`Fallo #${newHistoryId} registrado. Click en "Guardar y Subir a GitHub" para publicar.`);
+      alert(`Impresión #${newId} registrada. Ahora clasifica el resultado en la tabla de abajo.`);
     });
 
     // Guardar y hacer push a GitHub
@@ -727,12 +636,16 @@
       const sorted = [...currentData.history].sort((a, b) => b.id - a.id);
 
       const rows = sorted.map(h => {
-        const statusBadge = h.status === 'completed'
-          ? '<span style="color: var(--success);">✓ Completada</span>'
-          : '<span style="color: var(--error);">✗ Fallida</span>';
+        const statusLabels = {
+          'pending': '<span class="status-pending">⏳ Pendiente</span>',
+          'completed': '<span class="status-completed">✓ Exitosa</span>',
+          'partial': '<span class="status-partial">⚠️ Parcial</span>',
+          'failed': '<span class="status-failed">✗ Fallida</span>'
+        };
+        const statusBadge = statusLabels[h.status] || '<span class="status-pending">⏳ Pendiente</span>';
 
         return `
-          <tr id="row-${h.id}">
+          <tr id="row-${h.id}" class="${h.status === 'pending' ? 'edit-row' : ''}">
             <td>#${h.id}</td>
             <td>${h.date}</td>
             <td>${h.item === 'pocillos' ? 'Pocillos' : 'Charolas'}</td>
@@ -798,8 +711,10 @@
         <td><input type="number" id="edit-duration-${id}" value="${item.duration}" min="0"></td>
         <td>
           <select id="edit-status-${id}">
-            <option value="completed" ${item.status === 'completed' ? 'selected' : ''}>Completada</option>
-            <option value="failed" ${item.status === 'failed' ? 'selected' : ''}>Fallida</option>
+            <option value="pending" ${item.status === 'pending' ? 'selected' : ''}>⏳ Pendiente</option>
+            <option value="completed" ${item.status === 'completed' ? 'selected' : ''}>✓ Exitosa</option>
+            <option value="partial" ${item.status === 'partial' ? 'selected' : ''}>⚠️ Parcial</option>
+            <option value="failed" ${item.status === 'failed' ? 'selected' : ''}>✗ Fallida</option>
           </select>
         </td>
         <td><textarea id="edit-notes-${id}">${item.notes || ''}</textarea></td>

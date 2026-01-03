@@ -6,7 +6,8 @@
       "charolas": 20
     },
     "startDate": "2026-01-02",
-    "targetEndDate": "2026-01-20"
+    "targetEndDate": "2026-01-20",
+    "workHoursPerDay": 20
   },
   "currentPrint": {
     "isActive": true,

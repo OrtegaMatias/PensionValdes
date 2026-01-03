@@ -4,7 +4,8 @@
 class Calculator {
   constructor(data) {
     this.data = data;
-    this.workHoursPerDay = 8; // Horas de trabajo por día
+    // Usar horas configuradas en meta, o default 20h
+    this.workHoursPerDay = data.meta.workHoursPerDay || 20;
   }
 
   /**
@@ -13,6 +14,7 @@ class Calculator {
    */
   updateData(data) {
     this.data = data;
+    this.workHoursPerDay = data.meta.workHoursPerDay || 20;
   }
 
   /**
@@ -23,9 +25,9 @@ class Calculator {
     let pocillos = 0;
     let charolas = 0;
 
-    // Sumar todas las impresiones completadas
+    // Sumar impresiones completadas y parciales (no pending ni failed)
     this.data.history.forEach(h => {
-      if (h.status === 'completed') {
+      if (h.status === 'completed' || h.status === 'partial') {
         if (h.item === 'pocillos') {
           pocillos += h.batchSize;
         } else if (h.item === 'charolas') {
@@ -59,7 +61,7 @@ class Calculator {
    */
   getAverageDuration(itemType) {
     const completed = this.data.history.filter(
-      h => h.item === itemType && h.status === 'completed' && h.duration > 0
+      h => h.item === itemType && (h.status === 'completed' || h.status === 'partial') && h.duration > 0
     );
 
     if (completed.length === 0) return null;
@@ -75,7 +77,7 @@ class Calculator {
    */
   getWeightedAverage(itemType) {
     const completed = this.data.history
-      .filter(h => h.item === itemType && h.status === 'completed' && h.duration > 0)
+      .filter(h => h.item === itemType && (h.status === 'completed' || h.status === 'partial') && h.duration > 0)
       .reverse(); // Más recientes primero
 
     if (completed.length === 0) return null;

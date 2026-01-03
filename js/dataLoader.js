@@ -109,8 +109,8 @@ class DataLoader {
         if (!h.status) {
           errors.push(`history[${i}]: falta "status"`);
         }
-        if (h.status && !['completed', 'failed'].includes(h.status)) {
-          errors.push(`history[${i}]: "status" debe ser "completed" o "failed"`);
+        if (h.status && !['completed', 'failed', 'pending', 'partial'].includes(h.status)) {
+          errors.push(`history[${i}]: "status" debe ser "completed", "failed", "pending" o "partial"`);
         }
       });
     }
