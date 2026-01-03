@@ -5,35 +5,16 @@
       "pocillos": 100,
       "charolas": 20
     },
-    "startDate": "2026-01-03",
-    "targetEndDate": "2026-02-15"
+    "startDate": "2026-01-02",
+    "targetEndDate": "2026-01-20"
   },
   "currentPrint": {
-    "isActive": false,
-    "item": "",
-    "batchSize": 0,
-    "startTime": "",
-    "estimatedDuration": 0
+    "isActive": true,
+    "item": "pocillos",
+    "batchSize": 9,
+    "startTime": "2026-01-03T17:03",
+    "estimatedDuration": 640
   },
-  "history": [
-    {
-      "id": 1,
-      "date": "2026-01-03",
-      "item": "pocillos",
-      "batchSize": 4,
-      "duration": 180,
-      "status": "completed",
-      "notes": "Primera impresión exitosa"
-    },
-    {
-      "id": 2,
-      "date": "2026-01-03",
-      "item": "pocillos",
-      "batchSize": 4,
-      "duration": 175,
-      "status": "completed",
-      "notes": ""
-    }
-  ],
+  "history": [],
   "issues": []
 }
