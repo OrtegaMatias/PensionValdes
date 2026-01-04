@@ -39,22 +39,44 @@ class Renderer {
     const progress = this.calculator.getCurrentPrintProgress();
 
     const itemLabel = this.data.currentPrint.item === 'pocillos' ? 'Pocillos' : 'Charolas';
+    const startTime = new Date(this.data.currentPrint.startTime);
+    const startTimeStr = startTime.toLocaleString('es-ES', {
+      day: '2-digit',
+      month: 'short',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
 
     container.innerHTML = `
       <div class="current-status-content">
         <div class="status-badge status-active">FUNCIONANDO</div>
         <div class="status-info">
-          <h3>Imprimiendo: ${itemLabel}</h3>
-          <p>Lote: ${this.data.currentPrint.batchSize} unidades</p>
+          <h3>Imprimiendo ${this.data.currentPrint.batchSize} ${itemLabel}</h3>
+          <p style="color: var(--text-secondary); margin-bottom: var(--spacing-md);">Iniciado: ${startTimeStr}</p>
           <div class="progress-bar">
             <div class="progress-fill" style="width: ${progress}%"></div>
           </div>
-          <div class="time-info">
-            <span class="time-elapsed">${Calculator.formatDuration(elapsed)}</span>
-            <span>/</span>
-            <span class="time-estimated">${Calculator.formatDuration(estimated)} estimados</span>
+          <div class="estimation-primary" style="margin-top: var(--spacing-lg); padding: 0; border: none;">
+            <div class="estimation-item">
+              <div class="estimation-label">Tipo</div>
+              <div class="estimation-value" style="font-size: 1.25rem;">${itemLabel}</div>
+            </div>
+            <div class="estimation-item">
+              <div class="estimation-label">Lote</div>
+              <div class="estimation-value" style="font-size: 1.25rem;">${this.data.currentPrint.batchSize} unidades</div>
+            </div>
+            <div class="estimation-item">
+              <div class="estimation-label">Duración Estimada</div>
+              <div class="estimation-value" style="font-size: 1.25rem;">${Calculator.formatDuration(estimated)}</div>
+            </div>
+            <div class="estimation-item">
+              <div class="estimation-label">Tiempo Transcurrido</div>
+              <div class="estimation-value" style="font-size: 1.25rem;">${Calculator.formatDuration(elapsed)}</div>
+            </div>
           </div>
-          <p class="text-muted">Tiempo restante: ${Calculator.formatDuration(remaining)}</p>
+          <p class="text-muted" style="margin-top: var(--spacing-md); text-align: center;">
+            <strong>Tiempo restante:</strong> ${Calculator.formatDuration(remaining)}
+          </p>
         </div>
       </div>
     `;
