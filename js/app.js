@@ -7,7 +7,7 @@ class DashboardApp {
     this.calculator = null;
     this.renderer = null;
     this.charts = null;
-    this.refreshInterval = 60000; // 1 minuto en milisegundos
+    this.refreshInterval = 30000; // 30 segundos en milisegundos
     this.autoRefreshTimer = null;
   }
 
