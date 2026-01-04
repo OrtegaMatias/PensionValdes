@@ -10,13 +10,23 @@
     "workHoursPerDay": 18
   },
   "currentPrint": {
-    "isActive": false,
-    "item": "",
-    "batchSize": 0,
-    "startTime": "",
-    "estimatedDuration": 0
+    "isActive": true,
+    "item": "pocillos",
+    "batchSize": 9,
+    "startTime": "2026-01-04T12:01",
+    "estimatedDuration": 600
   },
   "history": [
+    {
+      "id": 2,
+      "date": "2026-01-04",
+      "item": "pocillos",
+      "batchSize": 9,
+      "duration": 600,
+      "status": "pending",
+      "goodCount": 0,
+      "notes": ""
+    },
     {
       "id": 1,
       "date": "2026-01-03",
