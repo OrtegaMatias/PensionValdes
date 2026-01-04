@@ -1283,24 +1283,41 @@
       const startTime = new Date(currentData.currentPrint.startTime);
       const now = new Date();
       const durationMinutes = Math.floor((now - startTime) / 60000);
+      const startDate = startTime.toISOString().split('T')[0];
 
-      // Crear entrada en historial como "pending"
-      const newId = currentData.history.length > 0
-        ? Math.max(...currentData.history.map(h => h.id)) + 1
-        : 1;
+      // Buscar la entrada existente en el historial que corresponde a esta impresión
+      const existingEntry = currentData.history.find(h =>
+        h.item === currentData.currentPrint.item &&
+        h.batchSize === currentData.currentPrint.batchSize &&
+        h.date === startDate &&
+        h.status === 'pending'
+      );
 
-      const historyEntry = {
-        id: newId,
-        date: startTime.toISOString().split('T')[0],
-        item: currentData.currentPrint.item,
-        batchSize: currentData.currentPrint.batchSize,
-        duration: durationMinutes,
-        status: 'pending',
-        goodCount: 0,
-        notes: `Detenida manualmente después de ${durationMinutes} minutos`
-      };
+      if (existingEntry) {
+        // Actualizar la entrada existente con la duración real
+        existingEntry.duration = durationMinutes;
+        existingEntry.notes = existingEntry.notes
+          ? `${existingEntry.notes} | Detenida manualmente después de ${durationMinutes} minutos`
+          : `Detenida manualmente después de ${durationMinutes} minutos`;
+      } else {
+        // Si no existe, crear una nueva entrada (caso raro)
+        const newId = currentData.history.length > 0
+          ? Math.max(...currentData.history.map(h => h.id)) + 1
+          : 1;
 
-      currentData.history.unshift(historyEntry);
+        const historyEntry = {
+          id: newId,
+          date: startDate,
+          item: currentData.currentPrint.item,
+          batchSize: currentData.currentPrint.batchSize,
+          duration: durationMinutes,
+          status: 'pending',
+          goodCount: 0,
+          notes: `Detenida manualmente después de ${durationMinutes} minutos`
+        };
+
+        currentData.history.unshift(historyEntry);
+      }
 
       // Desactivar impresión actual
       currentData.currentPrint = {
