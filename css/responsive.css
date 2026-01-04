@@ -73,8 +73,14 @@
     padding: var(--spacing-md) var(--spacing-lg);
   }
 
-  .estimation-icon {
-    font-size: 2rem;
+  .estimation-icon-wrapper {
+    width: 48px;
+    height: 48px;
+  }
+
+  .estimation-icon-wrapper svg {
+    width: 28px;
+    height: 28px;
   }
 
   .estimation-value {
@@ -85,10 +91,14 @@
     grid-template-columns: 1fr;
   }
 
-  .schedule-icon {
+  .schedule-icon-wrapper {
     width: 40px;
     height: 40px;
-    font-size: 1.5rem;
+  }
+
+  .schedule-icon-wrapper svg {
+    width: 20px;
+    height: 20px;
   }
 
   .schedule-value {

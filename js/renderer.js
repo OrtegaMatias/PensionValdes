@@ -182,32 +182,56 @@ class Renderer {
       scheduleHtml = `
         <div class="estimation-schedule">
           <div class="schedule-header">
-            <h4>📊 Comparación con Cronograma</h4>
+            <h4>Comparación con Cronograma</h4>
           </div>
           <div class="schedule-metrics">
             <div class="schedule-metric">
-              <div class="schedule-icon ${schedule.willFinishOnTime ? 'success' : 'warning'}">${schedule.willFinishOnTime ? '✓' : '⚠'}</div>
+              <div class="schedule-icon-wrapper ${schedule.willFinishOnTime ? 'success' : 'warning'}">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  ${schedule.willFinishOnTime
+                    ? '<polyline points="20 6 9 17 4 12"/>'
+                    : '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>'}
+                </svg>
+              </div>
               <div class="schedule-details">
                 <div class="schedule-label">Estado</div>
                 <div class="schedule-value ${statusClass}">${statusLabel}</div>
               </div>
             </div>
             <div class="schedule-metric">
-              <div class="schedule-icon">📅</div>
+              <div class="schedule-icon-wrapper neutral">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                  <line x1="16" y1="2" x2="16" y2="6"/>
+                  <line x1="8" y1="2" x2="8" y2="6"/>
+                  <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+              </div>
               <div class="schedule-details">
                 <div class="schedule-label">Fecha Pactada</div>
                 <div class="schedule-value">${Calculator.formatDate(schedule.targetDate)}</div>
               </div>
             </div>
             <div class="schedule-metric">
-              <div class="schedule-icon ${schedule.progressDifference >= 0 ? 'success' : 'error'}">📈</div>
+              <div class="schedule-icon-wrapper ${schedule.progressDifference >= 0 ? 'success' : 'error'}">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="20" x2="12" y2="10"/>
+                  <line x1="18" y1="20" x2="18" y2="4"/>
+                  <line x1="6" y1="20" x2="6" y2="16"/>
+                </svg>
+              </div>
               <div class="schedule-details">
                 <div class="schedule-label">Diferencia de Progreso</div>
                 <div class="schedule-value ${statusClass}">${schedule.progressDifference > 0 ? '+' : ''}${schedule.progressDifference}%</div>
               </div>
             </div>
             <div class="schedule-metric">
-              <div class="schedule-icon ${schedule.willFinishOnTime ? 'success' : 'warning'}">⏰</div>
+              <div class="schedule-icon-wrapper ${schedule.willFinishOnTime ? 'success' : 'warning'}">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="12 6 12 12 16 14"/>
+                </svg>
+              </div>
               <div class="schedule-details">
                 <div class="schedule-label">Desviación Temporal</div>
                 <div class="schedule-value ${schedule.willFinishOnTime ? 'text-success' : 'text-error'}">${diffText}</div>
@@ -222,21 +246,39 @@ class Renderer {
       <div class="estimation-content">
         <div class="estimation-primary">
           <div class="estimation-card">
-            <div class="estimation-icon">⏱️</div>
+            <div class="estimation-icon-wrapper clock">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </div>
             <div class="estimation-details">
               <div class="estimation-label">Tiempo Restante</div>
               <div class="estimation-value">${Calculator.formatDuration(remaining.minutes)}</div>
             </div>
           </div>
           <div class="estimation-card">
-            <div class="estimation-icon">📅</div>
+            <div class="estimation-icon-wrapper calendar">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+            </div>
             <div class="estimation-details">
               <div class="estimation-label">Días Necesarios</div>
               <div class="estimation-value">${estimation.daysNeeded} días</div>
             </div>
           </div>
           <div class="estimation-card highlight">
-            <div class="estimation-icon">🎯</div>
+            <div class="estimation-icon-wrapper target">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <circle cx="12" cy="12" r="6"/>
+                <circle cx="12" cy="12" r="2"/>
+              </svg>
+            </div>
             <div class="estimation-details">
               <div class="estimation-label">Fecha Estimada de Término</div>
               <div class="estimation-value">${Calculator.formatDate(estimation.date)}</div>
@@ -246,7 +288,7 @@ class Renderer {
         ${scheduleHtml}
       </div>
       <div class="estimation-disclaimer">
-        <span style="font-weight: 600;">📊 Datos de estimación:</span> ${stats.completed} impresiones completadas • ${this.calculator.workHoursPerDay}h de trabajo diarias
+        <strong>Datos de estimación:</strong> ${stats.completed} impresiones completadas • ${this.calculator.workHoursPerDay}h de trabajo diarias
         ${schedule ? ` • Progreso esperado: ${schedule.expectedTimeProgress}% vs. real: ${schedule.actualProgress}%` : ''}
       </div>
     `;
