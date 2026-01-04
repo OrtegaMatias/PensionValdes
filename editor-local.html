@@ -417,6 +417,22 @@
       background: var(--bg-secondary);
     }
 
+    .history-table tbody tr.row-printing {
+      background: #D1FAE5;
+    }
+
+    .history-table tbody tr.row-printing:hover {
+      background: #A7F3D0;
+    }
+
+    .history-table tbody tr.row-pending-review {
+      background: #FED7AA;
+    }
+
+    .history-table tbody tr.row-pending-review:hover {
+      background: #FDBA74;
+    }
+
     .history-table tbody tr.row-pending {
       background: #FEF9C3;
     }
@@ -665,6 +681,8 @@
       color: var(--text-secondary);
     }
 
+    .status-printing { color: #059669; font-weight: 600; }
+    .status-pending-review { color: #F59E0B; font-weight: 600; }
     .status-pending { color: #CA8A04; font-weight: 600; }
     .status-completed { color: #059669; font-weight: 600; }
     .status-partial { color: #F59E0B; font-weight: 600; }
@@ -1104,13 +1122,45 @@
       const sorted = [...currentData.history].sort((a, b) => b.id - a.id);
 
       const rows = sorted.map(h => {
-        const statusLabels = {
-          'pending': '<span class="status-pending">⏳ Pendiente</span>',
-          'completed': '<span class="status-completed">✓ Exitosa</span>',
-          'partial': '<span class="status-partial">⚠️ Parcial</span>',
-          'failed': '<span class="status-failed">✗ Fallida</span>'
-        };
-        const statusBadge = statusLabels[h.status] || statusLabels.pending;
+        // Detectar si es la impresión actual activa
+        const isCurrentPrint = currentData.currentPrint.isActive &&
+                               h.item === currentData.currentPrint.item &&
+                               h.batchSize === currentData.currentPrint.batchSize &&
+                               h.date === currentData.currentPrint.startTime.split('T')[0];
+
+        // Calcular si el tiempo estimado ya pasó (solo para la impresión actual)
+        let isPendingReview = false;
+        if (isCurrentPrint && h.status === 'pending') {
+          const startTime = new Date(currentData.currentPrint.startTime);
+          const now = new Date();
+          const elapsedMinutes = Math.floor((now - startTime) / 60000);
+          isPendingReview = elapsedMinutes >= currentData.currentPrint.estimatedDuration;
+        }
+
+        // Determinar el badge de estado
+        let statusBadge;
+        let rowClass = '';
+
+        if (isPendingReview) {
+          // Impresión actual cuyo tiempo estimado ya pasó
+          statusBadge = '<span class="status-pending-review">⏰ Pendiente de revisión</span>';
+          rowClass = 'row-pending-review';
+        } else if (isCurrentPrint) {
+          // Impresión actual en proceso
+          statusBadge = '<span class="status-printing">🖨️ Imprimiendo</span>';
+          rowClass = 'row-printing';
+        } else {
+          // Estados normales
+          const statusLabels = {
+            'pending': '<span class="status-pending">⏳ Pendiente</span>',
+            'completed': '<span class="status-completed">✓ Exitosa</span>',
+            'partial': '<span class="status-partial">⚠️ Parcial</span>',
+            'failed': '<span class="status-failed">✗ Fallida</span>'
+          };
+          statusBadge = statusLabels[h.status] || statusLabels.pending;
+          rowClass = h.status === 'pending' ? 'row-pending' : '';
+        }
+
         const hasGoodCount = Number.isFinite(h.goodCount);
         const goodCountDisplay = hasGoodCount
           ? h.goodCount
@@ -1118,7 +1168,7 @@
         const durationDisplay = h.duration > 0 ? `${h.duration} min` : '--';
 
         return `
-          <tr class="${h.status === 'pending' ? 'row-pending' : ''}">
+          <tr class="${rowClass}">
             <td><strong>#${h.id}</strong></td>
             <td>${h.date}</td>
             <td>${h.item === 'pocillos' ? 'Pocillos' : 'Charolas'}</td>
@@ -1438,10 +1488,17 @@
       }
     }
 
+    // Auto-refresh para actualizar estado de impresiones
+    setInterval(() => {
+      if (currentData && currentData.currentPrint.isActive) {
+        renderHistoryTable();
+        updateStatusDisplay();
+      }
+    }, 30000); // Actualizar cada 30 segundos
+
     // Init
     async function init() {
       await loadData();
-      renderHistoryTable();
     }
 
     init();
