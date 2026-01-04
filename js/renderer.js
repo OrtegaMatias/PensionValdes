@@ -177,26 +177,14 @@ class Renderer {
     const container = document.getElementById(containerId);
     if (!container) return;
 
-    const percentage = goal > 0 ? Math.round((current / goal) * 100) : 0;
+    const displayCurrent = current + inProgress;
+    const percentage = goal > 0 ? Math.round((displayCurrent / goal) * 100) : 0;
     const circumference = 2 * Math.PI * 70; // radio = 70
     const offset = circumference - (percentage / 100) * circumference;
 
     const color = colorClass === 'primary' ? '#A5B4FC' : '#FDBA74';
-    const inProgressColor = colorClass === 'primary' ? '#4F46E5' : '#F97316';
-    const inProgressTotal = current + inProgress;
-    const inProgressPercentage = goal > 0
-      ? Math.min(100, Math.round((inProgressTotal / goal) * 100))
-      : 0;
-    const inProgressRadius = 76;
-    const inProgressCircumference = 2 * Math.PI * inProgressRadius;
-    const inProgressOffset = inProgressCircumference - (inProgressPercentage / 100) * inProgressCircumference;
-    const inProgressRing = inProgress > 0
-      ? `<circle cx="80" cy="80" r="${inProgressRadius}" fill="none" stroke="${inProgressColor}" stroke-width="6"
-          stroke-dasharray="${inProgressCircumference}" stroke-dashoffset="${inProgressOffset}"
-          stroke-linecap="round" style="transition: stroke-dashoffset 0.5s ease;"/>`
-      : '';
-    const inProgressLabel = inProgress > 0
-      ? `<div class="progress-inprogress ${colorClass}">+${inProgress} en curso</div>`
+    const inProgressTag = inProgress > 0
+      ? `<span class="progress-inprogress-tag ${colorClass}">+${inProgress} en curso</span>`
       : '';
 
     container.innerHTML = `
@@ -204,7 +192,6 @@ class Renderer {
       <div class="circular-progress-container">
         <svg class="circular-progress" viewBox="0 0 160 160">
           <circle cx="80" cy="80" r="70" fill="none" stroke="#e5e7eb" stroke-width="12"/>
-          ${inProgressRing}
           <circle cx="80" cy="80" r="70" fill="none" stroke="${color}" stroke-width="12"
                   stroke-dasharray="${circumference}" stroke-dashoffset="${offset}"
                   style="transition: stroke-dashoffset 0.5s ease;"/>
@@ -213,8 +200,10 @@ class Renderer {
           <div class="progress-number">${percentage}%</div>
         </div>
       </div>
-      <div class="progress-count">${current}<span class="progress-goal"> / ${goal}</span></div>
-      ${inProgressLabel}
+      <div class="progress-count-row">
+        <div class="progress-count">${current}<span class="progress-goal"> / ${goal}</span></div>
+        ${inProgressTag}
+      </div>
     `;
   }
 

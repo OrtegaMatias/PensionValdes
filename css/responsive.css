@@ -79,6 +79,15 @@
     font-size: 1.25rem;
   }
 
+  .progress-count-row {
+    gap: var(--spacing-xs);
+  }
+
+  .progress-inprogress-tag {
+    font-size: 0.6875rem;
+    padding: 0.15rem 0.4rem;
+  }
+
   /* Estimación */
   .estimation-primary {
     grid-template-columns: 1fr;
@@ -205,6 +214,11 @@
 
   .progress-goal {
     font-size: 0.875rem;
+  }
+
+  .progress-inprogress-tag {
+    font-size: 0.625rem;
+    padding: 0.15rem 0.35rem;
   }
 
   /* Estimación */

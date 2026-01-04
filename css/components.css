@@ -287,7 +287,6 @@
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--text-primary);
-  margin-top: var(--spacing-md);
 }
 
 .progress-goal {
@@ -295,19 +294,32 @@
   color: var(--text-secondary);
 }
 
-.progress-inprogress {
-  font-size: 0.875rem;
+.progress-count-row {
+  margin-top: var(--spacing-md);
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.progress-inprogress-tag {
+  font-size: 0.75rem;
   font-weight: 600;
-  margin-top: var(--spacing-xs);
-  text-align: center;
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-full);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
 }
 
-.progress-inprogress.primary {
-  color: #4F46E5;
+.progress-inprogress-tag.primary {
+  background: #E0E7FF;
+  color: #3730A3;
 }
 
-.progress-inprogress.secondary {
-  color: #F97316;
+.progress-inprogress-tag.secondary {
+  background: #FFEDD5;
+  color: #9A3412;
 }
 
 /* Estimación */
