@@ -50,6 +50,21 @@
     padding: var(--spacing-lg);
   }
 
+  /* Estado Actual - Layout vertical en móvil */
+  .current-status-content {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+
+  .printer-info-card {
+    order: -1; /* Mostrar la impresora primero en móvil */
+  }
+
+  .printer-image-wrapper {
+    max-width: 280px;
+    margin: 0 auto;
+  }
+
   /* Progreso circular más pequeño en móvil */
   .circular-progress-container {
     width: 140px;

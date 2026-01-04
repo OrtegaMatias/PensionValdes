@@ -23,11 +23,62 @@ class Renderer {
     const container = document.getElementById('current-status-container');
     if (!container) return;
 
+    // Información de la impresora (siempre se muestra)
+    const printerInfoHtml = `
+      <div class="printer-info-card">
+        <div class="printer-image-wrapper">
+          <img src="https://www.creality.com/cdn/shop/files/Creality_Hi__3.jpg?v=1731293603&width=1000" alt="Creality Hi 3D Printer" loading="lazy">
+        </div>
+        <h4 class="printer-name">Creality Hi</h4>
+        <div class="printer-specs">
+          <div class="printer-spec-item">
+            <div class="printer-spec-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="2" width="20" height="20" rx="2" ry="2"/>
+              </svg>
+            </div>
+            <span class="printer-spec-label">Volumen</span>
+            <span class="printer-spec-value">260×260×300mm</span>
+          </div>
+          <div class="printer-spec-item">
+            <div class="printer-spec-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/>
+              </svg>
+            </div>
+            <span class="printer-spec-label">Velocidad</span>
+            <span class="printer-spec-value">hasta 500mm/s</span>
+          </div>
+          <div class="printer-spec-item">
+            <div class="printer-spec-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>
+              </svg>
+            </div>
+            <span class="printer-spec-label">Temp. Max</span>
+            <span class="printer-spec-value">300°C</span>
+          </div>
+          <div class="printer-spec-item">
+            <div class="printer-spec-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+              </svg>
+            </div>
+            <span class="printer-spec-label">Materiales</span>
+            <span class="printer-spec-value">PLA, ABS, PETG...</span>
+          </div>
+        </div>
+      </div>
+    `;
+
     if (!this.data.currentPrint.isActive) {
       container.innerHTML = `
         <div class="current-status-content">
-          <div class="status-badge status-idle">EN REPOSO</div>
-          <p class="idle-message">No hay impresión en curso actualmente</p>
+          <div class="status-left">
+            <div class="status-badge status-idle">EN REPOSO</div>
+            <p class="idle-message">No hay impresión en curso actualmente</p>
+          </div>
+          ${printerInfoHtml}
         </div>
       `;
       return;
@@ -49,35 +100,38 @@ class Renderer {
 
     container.innerHTML = `
       <div class="current-status-content">
-        <div class="status-badge status-active">FUNCIONANDO</div>
-        <div class="status-info">
-          <h3>Imprimiendo ${this.data.currentPrint.batchSize} ${itemLabel}</h3>
-          <p style="color: var(--text-secondary); margin-bottom: var(--spacing-md);">Iniciado: ${startTimeStr}</p>
-          <div class="progress-bar">
-            <div class="progress-fill" style="width: ${progress}%"></div>
+        <div class="status-left">
+          <div class="status-badge status-active">FUNCIONANDO</div>
+          <div class="status-info">
+            <h3>Imprimiendo ${this.data.currentPrint.batchSize} ${itemLabel}</h3>
+            <p style="color: var(--text-secondary); margin-bottom: var(--spacing-md);">Iniciado: ${startTimeStr}</p>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: ${progress}%"></div>
+            </div>
+            <div class="estimation-primary" style="margin-top: var(--spacing-lg); padding: 0; border: none;">
+              <div class="estimation-item">
+                <div class="estimation-label">Tipo</div>
+                <div class="estimation-value" style="font-size: 1.25rem;">${itemLabel}</div>
+              </div>
+              <div class="estimation-item">
+                <div class="estimation-label">Lote</div>
+                <div class="estimation-value" style="font-size: 1.25rem;">${this.data.currentPrint.batchSize} unidades</div>
+              </div>
+              <div class="estimation-item">
+                <div class="estimation-label">Duración Estimada</div>
+                <div class="estimation-value" style="font-size: 1.25rem;">${Calculator.formatDuration(estimated)}</div>
+              </div>
+              <div class="estimation-item">
+                <div class="estimation-label">Tiempo Transcurrido</div>
+                <div class="estimation-value" style="font-size: 1.25rem;">${Calculator.formatDuration(elapsed)}</div>
+              </div>
+            </div>
+            <p class="text-muted" style="margin-top: var(--spacing-md); text-align: center;">
+              <strong>Tiempo restante:</strong> ${Calculator.formatDuration(remaining)}
+            </p>
           </div>
-          <div class="estimation-primary" style="margin-top: var(--spacing-lg); padding: 0; border: none;">
-            <div class="estimation-item">
-              <div class="estimation-label">Tipo</div>
-              <div class="estimation-value" style="font-size: 1.25rem;">${itemLabel}</div>
-            </div>
-            <div class="estimation-item">
-              <div class="estimation-label">Lote</div>
-              <div class="estimation-value" style="font-size: 1.25rem;">${this.data.currentPrint.batchSize} unidades</div>
-            </div>
-            <div class="estimation-item">
-              <div class="estimation-label">Duración Estimada</div>
-              <div class="estimation-value" style="font-size: 1.25rem;">${Calculator.formatDuration(estimated)}</div>
-            </div>
-            <div class="estimation-item">
-              <div class="estimation-label">Tiempo Transcurrido</div>
-              <div class="estimation-value" style="font-size: 1.25rem;">${Calculator.formatDuration(elapsed)}</div>
-            </div>
-          </div>
-          <p class="text-muted" style="margin-top: var(--spacing-md); text-align: center;">
-            <strong>Tiempo restante:</strong> ${Calculator.formatDuration(remaining)}
-          </p>
         </div>
+        ${printerInfoHtml}
       </div>
     `;
   }
