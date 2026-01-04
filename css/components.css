@@ -243,6 +243,12 @@
   box-shadow: 0 1px 3px rgba(252, 165, 165, 0.2);
 }
 
+.confidence-none {
+  background: linear-gradient(135deg, #E5E7EB 0%, #D1D5DB 100%);
+  color: var(--idle-text);
+  box-shadow: 0 1px 3px rgba(203, 213, 225, 0.2);
+}
+
 .estimation-disclaimer {
   margin-top: var(--spacing-lg);
   padding: var(--spacing-md);

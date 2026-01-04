@@ -155,15 +155,16 @@ class Calculator {
 
   /**
    * Calcular nivel de confianza de las estimaciones
-   * @returns {string} 'high', 'medium', o 'low'
+   * @returns {string} 'high', 'medium', 'low', o 'none'
    */
   getConfidenceLevel() {
     const totalCompleted = this.data.history.filter(
-      h => h.status === 'completed'
+      h => (h.status === 'completed' || h.status === 'partial') && h.duration > 0
     ).length;
 
-    if (totalCompleted >= 10) return 'high';
-    if (totalCompleted >= 3) return 'medium';
+    if (totalCompleted === 0) return 'none';
+    if (totalCompleted >= 5) return 'high';
+    if (totalCompleted >= 2) return 'medium';
     return 'low';
   }
 

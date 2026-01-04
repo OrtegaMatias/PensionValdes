@@ -143,7 +143,8 @@ class Renderer {
     const confidenceLabel = {
       high: 'Alta',
       medium: 'Media',
-      low: 'Baja'
+      low: 'Baja',
+      none: 'Sin datos'
     }[estimation.confidence];
 
     let scheduleHtml = '';
