@@ -1488,7 +1488,7 @@
       }
 
       const existing = currentData.history[itemIndex];
-      currentData.history[itemIndex] = {
+      const updatedItem = {
         ...existing,
         id: editingId,
         date: document.getElementById('rate-date').value,
@@ -1500,7 +1500,29 @@
         notes: document.getElementById('rate-notes').value
       };
 
+      currentData.history[itemIndex] = updatedItem;
+
+      // Si esta impresión corresponde a la impresión actual activa, desactivarla
+      if (currentData.currentPrint.isActive) {
+        const startDate = new Date(currentData.currentPrint.startTime).toISOString().split('T')[0];
+        const isCurrentPrint = updatedItem.item === currentData.currentPrint.item &&
+                               updatedItem.batchSize === currentData.currentPrint.batchSize &&
+                               updatedItem.date === startDate;
+
+        if (isCurrentPrint && status !== 'pending') {
+          // Desactivar currentPrint ya que se ha calificado con un estado final
+          currentData.currentPrint = {
+            isActive: false,
+            item: '',
+            batchSize: 0,
+            startTime: '',
+            estimatedDuration: 0
+          };
+        }
+      }
+
       renderHistoryTable();
+      updateStatusDisplay();
       closeRatingPanel();
       alert('✅ Calificación guardada. No olvides publicar los cambios.');
     });
