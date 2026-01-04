@@ -63,6 +63,50 @@
   box-shadow: 0 1px 3px rgba(252, 165, 165, 0.2);
 }
 
+.badge-partial {
+  background: linear-gradient(135deg, #FEF9C3 0%, #FCD34D 100%);
+  color: var(--warning-text);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  box-shadow: 0 1px 3px rgba(252, 211, 77, 0.2);
+}
+
+.badge-pending {
+  background: linear-gradient(135deg, #FEF9C3 0%, #FDE68A 100%);
+  color: var(--warning-text);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  box-shadow: 0 1px 3px rgba(252, 211, 77, 0.2);
+}
+
+.badge-printing {
+  background: linear-gradient(135deg, #A7F3D0 0%, #86EFAC 100%);
+  color: var(--success-text);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  box-shadow: 0 1px 3px rgba(110, 231, 183, 0.2);
+}
+
+.badge-pending-review {
+  background: linear-gradient(135deg, #FED7AA 0%, #FDBA74 100%);
+  color: var(--warning-text);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  box-shadow: 0 1px 3px rgba(251, 146, 60, 0.2);
+}
+
 /* Estado actual */
 .current-status-content {
   display: flex;

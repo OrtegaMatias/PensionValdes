@@ -260,8 +260,44 @@ class Renderer {
     const toShow = this.showAllHistory ? sorted : sorted.slice(0, 10);
 
     const rows = toShow.map(h => {
-      const statusClass = h.status === 'completed' ? 'badge-completed' : 'badge-failed';
-      const statusLabel = h.status === 'completed' ? 'Completada' : 'Fallida';
+      // Detectar si es la impresión actual activa
+      const isCurrentPrint = this.data.currentPrint.isActive &&
+                             h.item === this.data.currentPrint.item &&
+                             h.batchSize === this.data.currentPrint.batchSize &&
+                             h.date === this.data.currentPrint.startTime.split('T')[0];
+
+      // Calcular si el tiempo estimado ya pasó (solo para la impresión actual)
+      let isPendingReview = false;
+      if (isCurrentPrint && h.status === 'pending') {
+        const startTime = new Date(this.data.currentPrint.startTime);
+        const now = new Date();
+        const elapsedMinutes = Math.floor((now - startTime) / 60000);
+        isPendingReview = elapsedMinutes >= this.data.currentPrint.estimatedDuration;
+      }
+
+      // Determinar el badge de estado
+      let statusClass, statusLabel;
+
+      if (isPendingReview) {
+        statusClass = 'badge-pending-review';
+        statusLabel = '⏰ Pendiente de revisión';
+      } else if (isCurrentPrint) {
+        statusClass = 'badge-printing';
+        statusLabel = '🖨️ Imprimiendo';
+      } else if (h.status === 'pending') {
+        statusClass = 'badge-pending';
+        statusLabel = '⏳ Pendiente';
+      } else if (h.status === 'completed') {
+        statusClass = 'badge-completed';
+        statusLabel = '✓ Exitosa';
+      } else if (h.status === 'partial') {
+        statusClass = 'badge-partial';
+        statusLabel = '⚠️ Parcial';
+      } else {
+        statusClass = 'badge-failed';
+        statusLabel = '✗ Fallida';
+      }
+
       const itemClass = h.item === 'pocillos' ? 'item-pocillos' : 'item-charolas';
       const itemLabel = h.item === 'pocillos' ? 'Pocillos' : 'Charolas';
       const durationText = h.duration > 0 ? Calculator.formatDuration(h.duration) : '--';
