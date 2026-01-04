@@ -1317,15 +1317,21 @@
     }
 
     function stopPrint() {
-      if (!confirm('¿Detener la impresión actual? Esto la marcará como pendiente en el historial.')) {
-        return;
-      }
-
       // Calcular duración transcurrida
       const startTime = new Date(currentData.currentPrint.startTime);
       const now = new Date();
       const durationMinutes = Math.floor((now - startTime) / 60000);
       const startDate = startTime.toISOString().split('T')[0];
+      const isPendingReview = durationMinutes >= currentData.currentPrint.estimatedDuration;
+
+      // Mensaje de confirmación diferente según el estado
+      const confirmMessage = isPendingReview
+        ? '¿Finalizar la impresión? Podrás calificarla desde el historial.'
+        : '¿Detener la impresión antes de tiempo? Esto la marcará como pendiente.';
+
+      if (!confirm(confirmMessage)) {
+        return;
+      }
 
       // Buscar la entrada existente en el historial que corresponde a esta impresión
       const existingEntry = currentData.history.find(h =>
@@ -1338,9 +1344,11 @@
       if (existingEntry) {
         // Actualizar la entrada existente con la duración real
         existingEntry.duration = durationMinutes;
-        existingEntry.notes = existingEntry.notes
-          ? `${existingEntry.notes} | Detenida manualmente después de ${durationMinutes} minutos`
-          : `Detenida manualmente después de ${durationMinutes} minutos`;
+        if (!isPendingReview) {
+          existingEntry.notes = existingEntry.notes
+            ? `${existingEntry.notes} | Detenida manualmente después de ${durationMinutes} minutos`
+            : `Detenida manualmente después de ${durationMinutes} minutos`;
+        }
       } else {
         // Si no existe, crear una nueva entrada (caso raro)
         const newId = currentData.history.length > 0
@@ -1355,24 +1363,32 @@
           duration: durationMinutes,
           status: 'pending',
           goodCount: 0,
-          notes: `Detenida manualmente después de ${durationMinutes} minutos`
+          notes: isPendingReview ? '' : `Detenida manualmente después de ${durationMinutes} minutos`
         };
 
         currentData.history.unshift(historyEntry);
       }
 
-      // Desactivar impresión actual
-      currentData.currentPrint = {
-        isActive: false,
-        item: '',
-        batchSize: 0,
-        startTime: '',
-        estimatedDuration: 0
-      };
+      // Solo desactivar si se detuvo ANTES del tiempo estimado
+      // Si ya pasó el tiempo (isPendingReview), mantener activo para que siga mostrando "Pendiente de revisión"
+      if (!isPendingReview) {
+        currentData.currentPrint = {
+          isActive: false,
+          item: '',
+          batchSize: 0,
+          startTime: '',
+          estimatedDuration: 0
+        };
+      }
 
       renderHistoryTable();
       updateStatusDisplay();
-      alert('Impresión detenida y guardada en el historial');
+
+      const message = isPendingReview
+        ? 'Impresión finalizada. Usa el botón "⭐ Calificar" en el historial para evaluarla.'
+        : 'Impresión detenida y guardada en el historial';
+
+      alert(message);
     }
 
     // Form: Execute Print
