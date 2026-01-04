@@ -295,6 +295,21 @@
   color: var(--text-secondary);
 }
 
+.progress-inprogress {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-top: var(--spacing-xs);
+  text-align: center;
+}
+
+.progress-inprogress.primary {
+  color: #4F46E5;
+}
+
+.progress-inprogress.secondary {
+  color: #F97316;
+}
+
 /* Estimación */
 .estimation-content {
   display: flex;

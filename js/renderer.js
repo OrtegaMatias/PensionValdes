@@ -141,6 +141,13 @@ class Renderer {
    */
   renderProgress() {
     const progress = this.calculator.getProgress();
+    const currentPrint = this.data.currentPrint;
+    const inProgressPocillos = currentPrint.isActive && currentPrint.item === 'pocillos'
+      ? currentPrint.batchSize
+      : 0;
+    const inProgressCharolas = currentPrint.isActive && currentPrint.item === 'charolas'
+      ? currentPrint.batchSize
+      : 0;
 
     // Pocillos
     this.renderProgressCard(
@@ -148,7 +155,8 @@ class Renderer {
       'Pocillos',
       progress.pocillos,
       this.data.meta.goals.pocillos,
-      'primary'
+      'primary',
+      inProgressPocillos
     );
 
     // Charolas
@@ -157,14 +165,15 @@ class Renderer {
       'Charolas',
       progress.charolas,
       this.data.meta.goals.charolas,
-      'secondary'
+      'secondary',
+      inProgressCharolas
     );
   }
 
   /**
    * Renderizar una tarjeta de progreso individual
    */
-  renderProgressCard(containerId, label, current, goal, colorClass) {
+  renderProgressCard(containerId, label, current, goal, colorClass, inProgress = 0) {
     const container = document.getElementById(containerId);
     if (!container) return;
 
@@ -173,12 +182,29 @@ class Renderer {
     const offset = circumference - (percentage / 100) * circumference;
 
     const color = colorClass === 'primary' ? '#A5B4FC' : '#FDBA74';
+    const inProgressColor = colorClass === 'primary' ? '#4F46E5' : '#F97316';
+    const inProgressTotal = current + inProgress;
+    const inProgressPercentage = goal > 0
+      ? Math.min(100, Math.round((inProgressTotal / goal) * 100))
+      : 0;
+    const inProgressRadius = 76;
+    const inProgressCircumference = 2 * Math.PI * inProgressRadius;
+    const inProgressOffset = inProgressCircumference - (inProgressPercentage / 100) * inProgressCircumference;
+    const inProgressRing = inProgress > 0
+      ? `<circle cx="80" cy="80" r="${inProgressRadius}" fill="none" stroke="${inProgressColor}" stroke-width="6"
+          stroke-dasharray="${inProgressCircumference}" stroke-dashoffset="${inProgressOffset}"
+          stroke-linecap="round" style="transition: stroke-dashoffset 0.5s ease;"/>`
+      : '';
+    const inProgressLabel = inProgress > 0
+      ? `<div class="progress-inprogress ${colorClass}">+${inProgress} en curso</div>`
+      : '';
 
     container.innerHTML = `
       <h3 class="progress-label">${label}</h3>
       <div class="circular-progress-container">
         <svg class="circular-progress" viewBox="0 0 160 160">
           <circle cx="80" cy="80" r="70" fill="none" stroke="#e5e7eb" stroke-width="12"/>
+          ${inProgressRing}
           <circle cx="80" cy="80" r="70" fill="none" stroke="${color}" stroke-width="12"
                   stroke-dasharray="${circumference}" stroke-dashoffset="${offset}"
                   style="transition: stroke-dashoffset 0.5s ease;"/>
@@ -188,6 +214,7 @@ class Renderer {
         </div>
       </div>
       <div class="progress-count">${current}<span class="progress-goal"> / ${goal}</span></div>
+      ${inProgressLabel}
     `;
   }
 
@@ -215,6 +242,8 @@ class Renderer {
       return;
     }
 
+    const workHours = this.calculator.workHoursPerDay;
+    const completedLabel = stats.completed === 1 ? 'impresión completada' : 'impresiones completadas';
     let scheduleHtml = '';
     if (schedule) {
       const statusLabel = {
@@ -229,9 +258,11 @@ class Renderer {
         'behind': 'text-error'
       }[schedule.status];
 
+      const dayCount = Math.abs(schedule.daysDifference);
+      const dayLabel = dayCount === 1 ? 'día' : 'días';
       const diffText = schedule.willFinishOnTime
-        ? `${Math.abs(schedule.daysDifference)} días antes`
-        : `${Math.abs(schedule.daysDifference)} días después`;
+        ? `${dayCount} ${dayLabel} antes`
+        : `${dayCount} ${dayLabel} después`;
 
       scheduleHtml = `
         <div class="estimation-schedule">
@@ -307,7 +338,7 @@ class Renderer {
               </svg>
             </div>
             <div class="estimation-details">
-              <div class="estimation-label">Tiempo Restante</div>
+              <div class="estimation-label">Tiempo Restante (tiempo real)</div>
               <div class="estimation-value">${Calculator.formatDuration(remaining.minutes)}</div>
             </div>
           </div>
@@ -321,7 +352,7 @@ class Renderer {
               </svg>
             </div>
             <div class="estimation-details">
-              <div class="estimation-label">Días Necesarios</div>
+              <div class="estimation-label">Días de Trabajo (${workHours}h/día)</div>
               <div class="estimation-value">${estimation.daysNeeded} días</div>
             </div>
           </div>
@@ -342,7 +373,7 @@ class Renderer {
         ${scheduleHtml}
       </div>
       <div class="estimation-disclaimer">
-        <strong>Datos de estimación:</strong> ${stats.completed} impresiones completadas • ${this.calculator.workHoursPerDay}h de trabajo diarias
+        <strong>Datos de estimación:</strong> ${stats.completed} ${completedLabel} • ${workHours}h de trabajo diarias
         ${schedule ? ` • Progreso esperado: ${schedule.expectedTimeProgress}% vs. real: ${schedule.actualProgress}%` : ''}
       </div>
     `;
