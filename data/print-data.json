@@ -22,8 +22,8 @@
       "date": "2026-01-04",
       "item": "pocillos",
       "batchSize": 1,
-      "duration": 1,
-      "status": "pending",
+      "duration": 4,
+      "status": "partial",
       "goodCount": 0,
       "notes": ""
     },
