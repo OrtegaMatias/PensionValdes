@@ -998,10 +998,14 @@
       const isActive = currentData.currentPrint.isActive;
 
       if (isActive) {
-        // Mostrar estado activo con detalles de la impresión actual
+        // Verificar si el tiempo estimado ya pasó
+        const startTime = new Date(currentData.currentPrint.startTime);
+        const now = new Date();
+        const elapsedMinutes = Math.floor((now - startTime) / 60000);
+        const isPendingReview = elapsedMinutes >= currentData.currentPrint.estimatedDuration;
+
         statusCard.classList.remove('idle');
         const itemLabel = currentData.currentPrint.item === 'pocillos' ? 'Pocillos' : 'Charolas';
-        const startTime = new Date(currentData.currentPrint.startTime);
         const startTimeStr = startTime.toLocaleString('es-ES', {
           day: '2-digit',
           month: 'short',
@@ -1009,39 +1013,77 @@
           minute: '2-digit'
         });
 
-        statusContent.innerHTML = `
-          <div class="status-display">
-            <div>
-              <div style="display: flex; align-items: center; gap: var(--spacing-md); margin-bottom: var(--spacing-sm);">
-                <div class="status-dot active"></div>
-                <h3 style="margin: 0; font-size: 1.25rem;">Imprimiendo ${currentData.currentPrint.batchSize} ${itemLabel}</h3>
+        if (isPendingReview) {
+          // Mostrar estado de pendiente de revisión
+          statusCard.style.background = 'linear-gradient(135deg, #FED7AA 0%, #FDBA74 100%)';
+          statusContent.innerHTML = `
+            <div class="status-display">
+              <div>
+                <div style="display: flex; align-items: center; gap: var(--spacing-md); margin-bottom: var(--spacing-sm);">
+                  <div class="status-dot" style="background: #F59E0B; animation: pulse 2s infinite;"></div>
+                  <h3 style="margin: 0; font-size: 1.25rem;">⏰ Pendiente de revisión</h3>
+                </div>
+                <p style="margin: 0; color: rgba(120, 53, 15, 0.8); font-size: 0.875rem;">Tiempo estimado completado • Iniciado: ${startTimeStr}</p>
               </div>
-              <p style="margin: 0; color: rgba(49, 46, 129, 0.7); font-size: 0.875rem;">Iniciado: ${startTimeStr}</p>
+              <button class="btn-stop-print" onclick="stopPrint()">✓ Finalizar</button>
             </div>
-            <button class="btn-stop-print" onclick="stopPrint()">⏹ Detener</button>
-          </div>
-          <div class="status-details">
-            <div class="status-detail-item">
-              <div class="status-detail-label">Tipo</div>
-              <div class="status-detail-value">${itemLabel}</div>
+            <div class="status-details">
+              <div class="status-detail-item">
+                <div class="status-detail-label">Tipo</div>
+                <div class="status-detail-value">${itemLabel}</div>
+              </div>
+              <div class="status-detail-item">
+                <div class="status-detail-label">Lote</div>
+                <div class="status-detail-value">${currentData.currentPrint.batchSize} unidades</div>
+              </div>
+              <div class="status-detail-item">
+                <div class="status-detail-label">Tiempo transcurrido</div>
+                <div class="status-detail-value">${elapsedMinutes} min</div>
+              </div>
+              <div class="status-detail-item">
+                <div class="status-detail-label">Estado</div>
+                <div class="status-detail-value" style="color: #F59E0B;">Revisar</div>
+              </div>
             </div>
-            <div class="status-detail-item">
-              <div class="status-detail-label">Lote</div>
-              <div class="status-detail-value">${currentData.currentPrint.batchSize} unidades</div>
+          `;
+        } else {
+          // Mostrar estado activo imprimiendo
+          statusCard.style.background = 'linear-gradient(135deg, #E0E7FF 0%, #DDD6FE 100%)';
+          statusContent.innerHTML = `
+            <div class="status-display">
+              <div>
+                <div style="display: flex; align-items: center; gap: var(--spacing-md); margin-bottom: var(--spacing-sm);">
+                  <div class="status-dot active"></div>
+                  <h3 style="margin: 0; font-size: 1.25rem;">Imprimiendo ${currentData.currentPrint.batchSize} ${itemLabel}</h3>
+                </div>
+                <p style="margin: 0; color: rgba(49, 46, 129, 0.7); font-size: 0.875rem;">Iniciado: ${startTimeStr}</p>
+              </div>
+              <button class="btn-stop-print" onclick="stopPrint()">⏹ Detener</button>
             </div>
-            <div class="status-detail-item">
-              <div class="status-detail-label">Duración estimada</div>
-              <div class="status-detail-value">${currentData.currentPrint.estimatedDuration} min</div>
+            <div class="status-details">
+              <div class="status-detail-item">
+                <div class="status-detail-label">Tipo</div>
+                <div class="status-detail-value">${itemLabel}</div>
+              </div>
+              <div class="status-detail-item">
+                <div class="status-detail-label">Lote</div>
+                <div class="status-detail-value">${currentData.currentPrint.batchSize} unidades</div>
+              </div>
+              <div class="status-detail-item">
+                <div class="status-detail-label">Duración estimada</div>
+                <div class="status-detail-value">${currentData.currentPrint.estimatedDuration} min</div>
+              </div>
+              <div class="status-detail-item">
+                <div class="status-detail-label">Inicio</div>
+                <div class="status-detail-value">${startTimeStr}</div>
+              </div>
             </div>
-            <div class="status-detail-item">
-              <div class="status-detail-label">Inicio</div>
-              <div class="status-detail-value">${startTimeStr}</div>
-            </div>
-          </div>
-        `;
+          `;
+        }
       } else {
         // Mostrar botón para ejecutar nueva impresión
         statusCard.classList.add('idle');
+        statusCard.style.background = 'linear-gradient(135deg, #E0E7FF 0%, #DDD6FE 100%)';
         statusContent.innerHTML = `
           <div class="status-display" onclick="openPrintModal()" style="cursor: pointer;">
             <div>
