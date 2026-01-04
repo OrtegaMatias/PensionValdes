@@ -16,17 +16,6 @@
     "startTime": "2026-01-03T17:03",
     "estimatedDuration": 640
   },
-  "history": [
-    {
-      "id": 1,
-      "date": "2026-01-03",
-      "item": "pocillos",
-      "batchSize": 9,
-      "duration": 640,
-      "status": "pending",
-      "goodCount": 8,
-      "notes": "Fallo una pieza"
-    }
-  ],
+  "history": [],
   "issues": []
 }
