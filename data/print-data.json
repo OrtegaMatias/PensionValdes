@@ -23,8 +23,8 @@
       "item": "pocillos",
       "batchSize": 9,
       "duration": 640,
-      "status": "pending",
-      "goodCount": 0,
+      "status": "completed",
+      "goodCount": 9,
       "notes": ""
     }
   ],
