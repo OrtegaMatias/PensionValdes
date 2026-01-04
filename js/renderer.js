@@ -27,7 +27,20 @@ class Renderer {
     const printerInfoHtml = `
       <div class="printer-info-card">
         <div class="printer-image-wrapper">
-          <img src="https://www.creality.com/cdn/shop/files/Creality_Hi__3.jpg?v=1731293603&width=1000" alt="Creality Hi 3D Printer" loading="lazy">
+          <svg width="100%" height="100%" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="40" y="120" width="120" height="60" rx="4" fill="#E5E7EB"/>
+            <rect x="45" y="125" width="110" height="50" rx="2" fill="#F9FAFB"/>
+            <rect x="60" y="60" width="80" height="60" fill="#C7D2FE" opacity="0.3"/>
+            <rect x="65" y="65" width="70" height="50" fill="#A5B4FC" opacity="0.5"/>
+            <circle cx="100" cy="50" r="8" fill="#6B21A8"/>
+            <line x1="100" y1="58" x2="100" y2="120" stroke="#6B21A8" stroke-width="3"/>
+            <rect x="50" y="115" width="20" height="5" fill="#9CA3AF"/>
+            <rect x="130" y="115" width="20" height="5" fill="#9CA3AF"/>
+            <rect x="70" y="135" width="60" height="30" rx="2" fill="#DDD6FE"/>
+            <text x="100" y="152" text-anchor="middle" fill="#4C1D95" font-size="12" font-weight="600">Creality Hi</text>
+            <circle cx="55" cy="175" r="3" fill="#10B981"/>
+            <rect x="80" y="25" width="40" height="20" rx="2" fill="#F3F4F6"/>
+          </svg>
         </div>
         <h4 class="printer-name">Creality Hi</h4>
         <div class="printer-specs">
