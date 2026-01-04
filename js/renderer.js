@@ -27,7 +27,7 @@ class Renderer {
     const printerInfoHtml = `
       <div class="printer-info-card">
         <div class="printer-image-wrapper">
-          <img src="images/creality-hi.png" alt="Impresora 3D Creality Hi" loading="lazy" decoding="async">
+          <img src="images/creality-hi.jpg" alt="Impresora 3D Creality Hi" loading="lazy" decoding="async">
         </div>
         <h4 class="printer-name">Creality Hi</h4>
         <div class="printer-specs">
