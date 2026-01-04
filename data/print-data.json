@@ -18,6 +18,16 @@
   },
   "history": [
     {
+      "id": 3,
+      "date": "2026-01-04",
+      "item": "pocillos",
+      "batchSize": 1,
+      "duration": 4,
+      "status": "pending",
+      "goodCount": 0,
+      "notes": ""
+    },
+    {
       "id": 2,
       "date": "2026-01-04",
       "item": "pocillos",
