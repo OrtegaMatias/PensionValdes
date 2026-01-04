@@ -157,15 +157,31 @@
       margin-bottom: var(--spacing-xl);
       box-shadow: 0 4px 20px rgba(167, 139, 250, 0.15);
       border: 1px solid rgba(167, 139, 250, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .status-card.idle {
+      cursor: pointer;
+    }
+
+    .status-card.idle:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(167, 139, 250, 0.2);
     }
 
     .status-display {
       display: flex;
       align-items: center;
+      justify-content: space-between;
+      gap: var(--spacing-md);
+    }
+
+    .status-info {
+      display: flex;
+      align-items: center;
       gap: var(--spacing-md);
       font-size: 1.125rem;
       font-weight: 600;
-      margin-bottom: var(--spacing-lg);
     }
 
     .status-dot {
@@ -193,83 +209,108 @@
       }
     }
 
-    .status-toggle {
-      display: flex;
-      align-items: center;
+    .status-details {
+      margin-top: var(--spacing-md);
+      padding-top: var(--spacing-md);
+      border-top: 1px solid rgba(255, 255, 255, 0.3);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: var(--spacing-md);
-      background: rgba(255, 255, 255, 0.5);
-      padding: var(--spacing-md);
-      border-radius: var(--radius-md);
-      cursor: pointer;
-      transition: all 0.2s ease;
+      font-size: 0.875rem;
     }
 
-    .status-toggle:hover {
-      background: rgba(255, 255, 255, 0.7);
+    .status-detail-item {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xs);
     }
 
-    .toggle-switch {
-      position: relative;
-      width: 44px;
-      height: 24px;
-      background: rgba(203, 213, 225, 0.5);
-      border-radius: 12px;
-      cursor: pointer;
-      transition: all 0.3s ease;
+    .status-detail-label {
+      color: rgba(49, 46, 129, 0.7);
+      font-weight: 500;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
-    .toggle-switch.active {
-      background: #86EFAC;
-    }
-
-    .toggle-slider {
-      position: absolute;
-      top: 2px;
-      left: 2px;
-      width: 20px;
-      height: 20px;
-      background: white;
-      border-radius: 50%;
-      transition: all 0.3s ease;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    }
-
-    .toggle-switch.active .toggle-slider {
-      left: 22px;
-    }
-
-    .status-form {
-      display: none;
-      margin-top: var(--spacing-lg);
-      padding-top: var(--spacing-lg);
-      border-top: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .status-form.active {
-      display: block;
-    }
-
-    .status-form .form-group label {
+    .status-detail-value {
       color: #312E81;
       font-weight: 600;
+      font-size: 0.9375rem;
     }
 
-    .status-form input,
-    .status-form select {
-      background: rgba(255, 255, 255, 0.8);
-      border: 1px solid rgba(167, 139, 250, 0.3);
+    .expand-icon {
+      font-size: 1.5rem;
+      color: rgba(49, 46, 129, 0.5);
+      transition: all 0.3s ease;
+    }
+
+    .status-card.idle:hover .expand-icon {
       color: #312E81;
+      transform: scale(1.1);
     }
 
-    .status-form input::placeholder {
-      color: rgba(49, 46, 129, 0.4);
+    .btn-stop-print {
+      background: linear-gradient(135deg, #FCA5A5 0%, #FEE2E2 100%);
+      color: #991B1B;
+      border: none;
+      padding: var(--spacing-sm) var(--spacing-lg);
+      border-radius: var(--radius-md);
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(252, 165, 165, 0.2);
     }
 
-    .status-form input:focus,
-    .status-form select:focus {
-      background: rgba(255, 255, 255, 0.95);
-      border-color: #C7D2FE;
-      box-shadow: 0 0 0 3px rgba(199, 210, 254, 0.3);
+    .btn-stop-print:hover {
+      background: linear-gradient(135deg, #FEE2E2 0%, #FCA5A5 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(252, 165, 165, 0.3);
+    }
+
+    /* Print Modal */
+    .print-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1002;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .print-modal.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .print-content {
+      background: var(--bg-primary);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-2xl);
+      max-width: 600px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+      animation: slideUp 0.3s ease;
+    }
+
+    .print-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .print-header h3 {
+      margin: 0;
+      font-size: 1.25rem;
+      color: #312E81;
     }
 
     /* Impresiones - Tabla principal */
@@ -715,50 +756,10 @@
       <!-- Left Column - Main Content -->
       <div>
         <!-- Estado Actual -->
-        <div class="status-card">
-          <div class="status-display" id="status-display">
-            <div class="status-dot inactive"></div>
-            <span>Cargando...</span>
+        <div class="status-card" id="status-card">
+          <div id="status-content">
+            <!-- Renderizado dinámicamente -->
           </div>
-
-          <div class="status-toggle" onclick="toggleStatusForm()">
-            <div class="toggle-switch" id="status-toggle">
-              <div class="toggle-slider"></div>
-            </div>
-            <span>Hay una impresión en curso</span>
-          </div>
-
-          <form class="status-form" id="status-form">
-            <div class="form-row">
-              <div class="form-group">
-                <label for="item-type">Tipo de ítem</label>
-                <select id="item-type">
-                  <option value="">Seleccionar...</option>
-                  <option value="pocillos">Pocillos</option>
-                  <option value="charolas">Charolas</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="batch-size">Tamaño del lote</label>
-                <input type="number" id="batch-size" min="1" placeholder="9">
-              </div>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label for="start-time">Fecha y hora de inicio</label>
-                <input type="datetime-local" id="start-time">
-              </div>
-
-              <div class="form-group">
-                <label for="estimated-duration">Duración estimada (min)</label>
-                <input type="number" id="estimated-duration" min="1" placeholder="640">
-              </div>
-            </div>
-
-            <button type="submit" class="btn-primary">Actualizar Estado</button>
-          </form>
         </div>
 
         <!-- Tabla de Impresiones -->
@@ -873,6 +874,53 @@
         </form>
       </div>
     </div>
+
+    <!-- Print Modal -->
+    <div class="print-modal" id="print-modal" onclick="closePrintIfOutside(event)">
+      <div class="print-content" onclick="event.stopPropagation()">
+        <div class="rating-header">
+          <div>
+            <h3>🖨️ Ejecutar una impresión 3D</h3>
+            <p style="margin: 4px 0 0 0; color: #6B7280; font-size: 0.875rem;">Configura los parámetros de la nueva impresión</p>
+          </div>
+          <button class="close-config" onclick="closePrintModal()">×</button>
+        </div>
+
+        <form id="form-execute-print">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="print-item">Tipo de ítem *</label>
+              <select id="print-item" required>
+                <option value="pocillos">Pocillos</option>
+                <option value="charolas">Charolas</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="print-batch">Tamaño del lote *</label>
+              <input type="number" id="print-batch" min="1" required placeholder="Ej: 9">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="print-start">Hora de inicio *</label>
+              <input type="datetime-local" id="print-start" required>
+            </div>
+            <div class="form-group">
+              <label for="print-duration">Duración estimada (minutos) *</label>
+              <input type="number" id="print-duration" min="1" required placeholder="Ej: 640">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="print-notes">Notas (opcional)</label>
+            <textarea id="print-notes" placeholder="Detalles adicionales de la impresión"></textarea>
+          </div>
+
+          <button type="submit" class="btn-primary">🚀 Iniciar Impresión</button>
+        </form>
+      </div>
+    </div>
   </div>
 
   <script src="js/dataLoader.js"></script>
@@ -892,14 +940,6 @@
       if (e.target === document.getElementById('config-modal')) {
         toggleConfig();
       }
-    }
-
-    // Toggle Status Form
-    function toggleStatusForm() {
-      const form = document.getElementById('status-form');
-      const toggle = document.getElementById('status-toggle');
-      const isActive = toggle.classList.toggle('active');
-      form.classList.toggle('active', isActive);
     }
 
     // Cargar datos
@@ -930,50 +970,71 @@
 
       updateStatusDisplay();
       loadProjectConfig();
-      loadCurrentPrintForm();
     }
 
     // Actualizar display del estado
     function updateStatusDisplay() {
-      const display = document.getElementById('status-display');
-      const toggle = document.getElementById('status-toggle');
-      const form = document.getElementById('status-form');
+      const statusCard = document.getElementById('status-card');
+      const statusContent = document.getElementById('status-content');
       const isActive = currentData.currentPrint.isActive;
 
       if (isActive) {
-        display.innerHTML = `
-          <div class="status-dot active"></div>
-          <span>Imprimiendo ${currentData.currentPrint.batchSize} ${currentData.currentPrint.item}</span>
+        // Mostrar estado activo con detalles de la impresión actual
+        statusCard.classList.remove('idle');
+        const itemLabel = currentData.currentPrint.item === 'pocillos' ? 'Pocillos' : 'Charolas';
+        const startTime = new Date(currentData.currentPrint.startTime);
+        const startTimeStr = startTime.toLocaleString('es-ES', {
+          day: '2-digit',
+          month: 'short',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+
+        statusContent.innerHTML = `
+          <div class="status-display">
+            <div>
+              <div style="display: flex; align-items: center; gap: var(--spacing-md); margin-bottom: var(--spacing-sm);">
+                <div class="status-dot active"></div>
+                <h3 style="margin: 0; font-size: 1.25rem;">Imprimiendo ${currentData.currentPrint.batchSize} ${itemLabel}</h3>
+              </div>
+              <p style="margin: 0; color: rgba(49, 46, 129, 0.7); font-size: 0.875rem;">Iniciado: ${startTimeStr}</p>
+            </div>
+            <button class="btn-stop-print" onclick="stopPrint()">⏹ Detener</button>
+          </div>
+          <div class="status-details">
+            <div class="status-detail-item">
+              <div class="status-detail-label">Tipo</div>
+              <div class="status-detail-value">${itemLabel}</div>
+            </div>
+            <div class="status-detail-item">
+              <div class="status-detail-label">Lote</div>
+              <div class="status-detail-value">${currentData.currentPrint.batchSize} unidades</div>
+            </div>
+            <div class="status-detail-item">
+              <div class="status-detail-label">Duración estimada</div>
+              <div class="status-detail-value">${currentData.currentPrint.estimatedDuration} min</div>
+            </div>
+            <div class="status-detail-item">
+              <div class="status-detail-label">Inicio</div>
+              <div class="status-detail-value">${startTimeStr}</div>
+            </div>
+          </div>
         `;
-        toggle.classList.add('active');
-        form.classList.add('active');
       } else {
-        display.innerHTML = `
-          <div class="status-dot inactive"></div>
-          <span>Sin impresión activa</span>
+        // Mostrar botón para ejecutar nueva impresión
+        statusCard.classList.add('idle');
+        statusContent.innerHTML = `
+          <div class="status-display" onclick="openPrintModal()" style="cursor: pointer;">
+            <div>
+              <div style="display: flex; align-items: center; gap: var(--spacing-md); margin-bottom: var(--spacing-sm);">
+                <div class="status-dot inactive"></div>
+                <h3 style="margin: 0; font-size: 1.25rem;">Ejecutar una impresión 3D</h3>
+              </div>
+              <p style="margin: 0; color: rgba(49, 46, 129, 0.7); font-size: 0.875rem;">Haz clic para configurar una nueva impresión</p>
+            </div>
+            <span class="expand-icon">▶</span>
+          </div>
         `;
-        toggle.classList.remove('active');
-        form.classList.remove('active');
-      }
-    }
-
-    // Cargar estado actual en formulario
-    function loadCurrentPrintForm() {
-      const isActive = currentData.currentPrint.isActive;
-
-      if (isActive) {
-        document.getElementById('item-type').value = currentData.currentPrint.item || '';
-        document.getElementById('batch-size').value = currentData.currentPrint.batchSize || '';
-        document.getElementById('start-time').value = currentData.currentPrint.startTime || '';
-        document.getElementById('estimated-duration').value = currentData.currentPrint.estimatedDuration || '';
-      } else {
-        document.getElementById('item-type').value = '';
-        document.getElementById('batch-size').value = '';
-        document.getElementById('estimated-duration').value = '';
-
-        const now = new Date();
-        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-        document.getElementById('start-time').value = now.toISOString().slice(0, 16);
       }
     }
 
@@ -998,46 +1059,6 @@
       currentData.meta.workHoursPerDay = parseInt(document.getElementById('work-hours').value);
       toggleConfig();
       alert('✅ Configuración guardada. No olvides publicar los cambios.');
-    });
-
-    // Form: Status
-    document.getElementById('status-form').addEventListener('submit', (e) => {
-      e.preventDefault();
-
-      const toggle = document.getElementById('status-toggle');
-      const isActive = toggle.classList.contains('active');
-
-      if (isActive) {
-        const itemType = document.getElementById('item-type').value;
-        const batchSize = parseInt(document.getElementById('batch-size').value);
-        const startTime = document.getElementById('start-time').value;
-        const estimatedDuration = parseInt(document.getElementById('estimated-duration').value);
-
-        if (!itemType || !batchSize || !startTime || !estimatedDuration) {
-          alert('⚠️ Completa todos los campos');
-          return;
-        }
-
-        currentData.currentPrint = {
-          isActive: true,
-          item: itemType,
-          batchSize: batchSize,
-          startTime: startTime,
-          estimatedDuration: estimatedDuration
-        };
-      } else {
-        currentData.currentPrint = {
-          isActive: false,
-          item: "",
-          batchSize: 0,
-          startTime: "",
-          estimatedDuration: 0
-        };
-      }
-
-      updateStatusDisplay();
-      renderHistoryTable();
-      alert('✅ Estado actualizado. No olvides publicar los cambios.');
     });
 
     // Agregar impresión
@@ -1174,6 +1195,119 @@
         closeRatingPanel();
       }
     }
+
+    // Print Modal Functions
+    function openPrintModal() {
+      const modal = document.getElementById('print-modal');
+      modal.classList.add('active');
+
+      // Prellenar fecha/hora actual
+      const now = new Date();
+      now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+      document.getElementById('print-start').value = now.toISOString().slice(0, 16);
+
+      // Limpiar otros campos
+      document.getElementById('print-item').value = 'pocillos';
+      document.getElementById('print-batch').value = '';
+      document.getElementById('print-duration').value = '';
+      document.getElementById('print-notes').value = '';
+    }
+
+    function closePrintModal() {
+      document.getElementById('print-modal').classList.remove('active');
+    }
+
+    function closePrintIfOutside(e) {
+      if (e.target === document.getElementById('print-modal')) {
+        closePrintModal();
+      }
+    }
+
+    function stopPrint() {
+      if (!confirm('¿Detener la impresión actual? Esto la marcará como pendiente en el historial.')) {
+        return;
+      }
+
+      // Calcular duración transcurrida
+      const startTime = new Date(currentData.currentPrint.startTime);
+      const now = new Date();
+      const durationMinutes = Math.floor((now - startTime) / 60000);
+
+      // Crear entrada en historial como "pending"
+      const newId = currentData.history.length > 0
+        ? Math.max(...currentData.history.map(h => h.id)) + 1
+        : 1;
+
+      const historyEntry = {
+        id: newId,
+        date: startTime.toISOString().split('T')[0],
+        item: currentData.currentPrint.item,
+        batchSize: currentData.currentPrint.batchSize,
+        duration: durationMinutes,
+        status: 'pending',
+        goodCount: 0,
+        notes: `Detenida manualmente después de ${durationMinutes} minutos`
+      };
+
+      currentData.history.unshift(historyEntry);
+
+      // Desactivar impresión actual
+      currentData.currentPrint = {
+        isActive: false,
+        item: '',
+        batchSize: 0,
+        startTime: '',
+        estimatedDuration: 0
+      };
+
+      renderHistoryTable();
+      updateStatusDisplay();
+      alert('Impresión detenida y guardada en el historial');
+    }
+
+    // Form: Execute Print
+    document.getElementById('form-execute-print').addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const item = document.getElementById('print-item').value;
+      const batchSize = parseInt(document.getElementById('print-batch').value);
+      const startTime = document.getElementById('print-start').value;
+      const estimatedDuration = parseInt(document.getElementById('print-duration').value);
+      const notes = document.getElementById('print-notes').value;
+
+      // Crear entrada en historial como "pending"
+      const newId = currentData.history.length > 0
+        ? Math.max(...currentData.history.map(h => h.id)) + 1
+        : 1;
+
+      const startDate = new Date(startTime);
+      const historyEntry = {
+        id: newId,
+        date: startDate.toISOString().split('T')[0],
+        item: item,
+        batchSize: batchSize,
+        duration: estimatedDuration,
+        status: 'pending',
+        goodCount: 0,
+        notes: notes || ''
+      };
+
+      currentData.history.unshift(historyEntry);
+
+      // Activar impresión actual
+      currentData.currentPrint = {
+        isActive: true,
+        item: item,
+        batchSize: batchSize,
+        startTime: startTime,
+        estimatedDuration: estimatedDuration
+      };
+
+      renderHistoryTable();
+      updateStatusDisplay();
+      closePrintModal();
+      alert('¡Impresión iniciada! Se ha agregado al historial como pendiente.');
+    });
 
     function updateGoodHint() {
       const batchValue = parseInt(document.getElementById('rate-batch').value);
