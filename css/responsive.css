@@ -66,15 +66,33 @@
 
   /* Estimación */
   .estimation-primary {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .estimation-schedule {
     grid-template-columns: 1fr;
   }
 
+  .estimation-card {
+    padding: var(--spacing-md) var(--spacing-lg);
+  }
+
+  .estimation-icon {
+    font-size: 2rem;
+  }
+
   .estimation-value {
+    font-size: 1.25rem;
+  }
+
+  .schedule-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .schedule-icon {
+    width: 40px;
+    height: 40px;
     font-size: 1.5rem;
+  }
+
+  .schedule-value {
+    font-size: 1rem;
   }
 
   /* Historial - tabla responsive */

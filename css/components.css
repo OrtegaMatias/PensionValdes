@@ -224,32 +224,50 @@
 
 .estimation-primary {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: var(--spacing-lg);
-  padding-bottom: var(--spacing-xl);
-  border-bottom: 2px solid var(--bg-secondary);
 }
 
-.estimation-schedule {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: var(--spacing-md);
-  padding: var(--spacing-lg);
-  background: var(--bg-secondary);
-  border-radius: var(--radius-md);
+.estimation-card {
+  background: linear-gradient(135deg, #F9FAFB 0%, #FFFFFF 100%);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg) var(--spacing-xl);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-.estimation-item {
-  text-align: center;
-  padding: var(--spacing-md);
+.estimation-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: var(--primary);
 }
 
-.estimation-value {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--primary-text);
-  margin-bottom: var(--spacing-xs);
-  line-height: 1.2;
+.estimation-card.highlight {
+  background: linear-gradient(135deg, #E0E7FF 0%, #DDD6FE 100%);
+  border-color: var(--primary);
+  box-shadow: 0 4px 12px rgba(167, 139, 250, 0.2);
+}
+
+.estimation-card.highlight:hover {
+  box-shadow: 0 6px 16px rgba(167, 139, 250, 0.3);
+}
+
+.estimation-icon {
+  font-size: 2.5rem;
+  line-height: 1;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  flex-shrink: 0;
+}
+
+.estimation-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
 }
 
 .estimation-label {
@@ -258,6 +276,116 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 600;
+  line-height: 1.2;
+}
+
+.estimation-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.estimation-card.highlight .estimation-value {
+  color: var(--primary-text);
+}
+
+.estimation-schedule {
+  padding: var(--spacing-xl);
+  background: linear-gradient(135deg, #FEF9C3 0%, #FEF3C7 100%);
+  border-radius: var(--radius-lg);
+  border: 2px solid #FDE68A;
+  box-shadow: 0 2px 8px rgba(252, 211, 77, 0.2);
+}
+
+.schedule-header {
+  margin-bottom: var(--spacing-lg);
+  text-align: center;
+}
+
+.schedule-header h4 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--warning-text);
+}
+
+.schedule-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.schedule-metric {
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  transition: all 0.2s ease;
+}
+
+.schedule-metric:hover {
+  background: rgba(255, 255, 255, 0.9);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.schedule-icon {
+  font-size: 2rem;
+  line-height: 1;
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.schedule-icon.success {
+  background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
+  color: var(--success-text);
+}
+
+.schedule-icon.warning {
+  background: linear-gradient(135deg, #FED7AA 0%, #FDBA74 100%);
+  color: var(--warning-text);
+}
+
+.schedule-icon.error {
+  background: linear-gradient(135deg, #FEE2E2 0%, #FCA5A5 100%);
+  color: var(--error-text);
+}
+
+.schedule-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.schedule-label {
+  font-size: 0.75rem;
+  color: var(--warning-text);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.9;
+}
+
+.schedule-value {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.estimation-item {
+  text-align: center;
+  padding: var(--spacing-md);
 }
 
 .confidence-badge {

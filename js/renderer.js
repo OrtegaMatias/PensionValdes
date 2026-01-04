@@ -181,21 +181,38 @@ class Renderer {
 
       scheduleHtml = `
         <div class="estimation-schedule">
-          <div class="estimation-item">
-            <div class="estimation-value ${statusClass}">${statusLabel}</div>
-            <div class="estimation-label">Estado vs. Plazo</div>
+          <div class="schedule-header">
+            <h4>📊 Comparación con Cronograma</h4>
           </div>
-          <div class="estimation-item">
-            <div class="estimation-value">${Calculator.formatDate(schedule.targetDate)}</div>
-            <div class="estimation-label">Fecha Pactada</div>
-          </div>
-          <div class="estimation-item">
-            <div class="estimation-value ${statusClass}">${schedule.progressDifference > 0 ? '+' : ''}${schedule.progressDifference}%</div>
-            <div class="estimation-label">Diferencia</div>
-          </div>
-          <div class="estimation-item">
-            <div class="estimation-value ${schedule.willFinishOnTime ? 'text-success' : 'text-error'}">${diffText}</div>
-            <div class="estimation-label">Desviación</div>
+          <div class="schedule-metrics">
+            <div class="schedule-metric">
+              <div class="schedule-icon ${schedule.willFinishOnTime ? 'success' : 'warning'}">${schedule.willFinishOnTime ? '✓' : '⚠'}</div>
+              <div class="schedule-details">
+                <div class="schedule-label">Estado</div>
+                <div class="schedule-value ${statusClass}">${statusLabel}</div>
+              </div>
+            </div>
+            <div class="schedule-metric">
+              <div class="schedule-icon">📅</div>
+              <div class="schedule-details">
+                <div class="schedule-label">Fecha Pactada</div>
+                <div class="schedule-value">${Calculator.formatDate(schedule.targetDate)}</div>
+              </div>
+            </div>
+            <div class="schedule-metric">
+              <div class="schedule-icon ${schedule.progressDifference >= 0 ? 'success' : 'error'}">📈</div>
+              <div class="schedule-details">
+                <div class="schedule-label">Diferencia de Progreso</div>
+                <div class="schedule-value ${statusClass}">${schedule.progressDifference > 0 ? '+' : ''}${schedule.progressDifference}%</div>
+              </div>
+            </div>
+            <div class="schedule-metric">
+              <div class="schedule-icon ${schedule.willFinishOnTime ? 'success' : 'warning'}">⏰</div>
+              <div class="schedule-details">
+                <div class="schedule-label">Desviación Temporal</div>
+                <div class="schedule-value ${schedule.willFinishOnTime ? 'text-success' : 'text-error'}">${diffText}</div>
+              </div>
+            </div>
           </div>
         </div>
       `;
@@ -204,25 +221,33 @@ class Renderer {
     container.innerHTML = `
       <div class="estimation-content">
         <div class="estimation-primary">
-          <div class="estimation-item">
-            <div class="estimation-value">${Calculator.formatDuration(remaining.minutes)}</div>
-            <div class="estimation-label">Tiempo Restante</div>
+          <div class="estimation-card">
+            <div class="estimation-icon">⏱️</div>
+            <div class="estimation-details">
+              <div class="estimation-label">Tiempo Restante</div>
+              <div class="estimation-value">${Calculator.formatDuration(remaining.minutes)}</div>
+            </div>
           </div>
-          <div class="estimation-item">
-            <div class="estimation-value">${estimation.daysNeeded}</div>
-            <div class="estimation-label">Días Necesarios</div>
+          <div class="estimation-card">
+            <div class="estimation-icon">📅</div>
+            <div class="estimation-details">
+              <div class="estimation-label">Días Necesarios</div>
+              <div class="estimation-value">${estimation.daysNeeded} días</div>
+            </div>
           </div>
-          <div class="estimation-item">
-            <div class="estimation-value">${Calculator.formatDate(estimation.date)}</div>
-            <div class="estimation-label">Fecha Estimada</div>
+          <div class="estimation-card highlight">
+            <div class="estimation-icon">🎯</div>
+            <div class="estimation-details">
+              <div class="estimation-label">Fecha Estimada de Término</div>
+              <div class="estimation-value">${Calculator.formatDate(estimation.date)}</div>
+            </div>
           </div>
         </div>
         ${scheduleHtml}
       </div>
       <div class="estimation-disclaimer">
-        Estimación basada en ${stats.completed} impresiones completadas.
-        Considera ${this.calculator.workHoursPerDay}h de trabajo diarias.
-        ${schedule ? `Progreso esperado: ${schedule.expectedTimeProgress}% • Progreso real: ${schedule.actualProgress}%` : ''}
+        <span style="font-weight: 600;">📊 Datos de estimación:</span> ${stats.completed} impresiones completadas • ${this.calculator.workHoursPerDay}h de trabajo diarias
+        ${schedule ? ` • Progreso esperado: ${schedule.expectedTimeProgress}% vs. real: ${schedule.actualProgress}%` : ''}
       </div>
     `;
   }
