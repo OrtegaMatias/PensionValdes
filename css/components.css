@@ -64,25 +64,25 @@
 }
 
 .badge-partial {
-  background: linear-gradient(135deg, #FEF9C3 0%, #FCD34D 100%);
-  color: var(--warning-text);
+  background: linear-gradient(135deg, #FED7AA 0%, #FDBA74 100%);
+  color: #92400E;
   padding: var(--spacing-xs) var(--spacing-sm);
   border-radius: var(--radius-sm);
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
-  box-shadow: 0 1px 3px rgba(252, 211, 77, 0.2);
+  box-shadow: 0 1px 3px rgba(251, 146, 60, 0.2);
 }
 
 .badge-pending {
-  background: linear-gradient(135deg, #FEF9C3 0%, #FDE68A 100%);
-  color: var(--warning-text);
+  background: linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%);
+  color: #1E40AF;
   padding: var(--spacing-xs) var(--spacing-sm);
   border-radius: var(--radius-sm);
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
-  box-shadow: 0 1px 3px rgba(252, 211, 77, 0.2);
+  box-shadow: 0 1px 3px rgba(147, 197, 253, 0.2);
 }
 
 .badge-printing {
@@ -435,9 +435,9 @@
 }
 
 .confidence-medium {
-  background: linear-gradient(135deg, #FEF9C3 0%, #FCD34D 100%);
-  color: var(--warning-text);
-  box-shadow: 0 1px 3px rgba(252, 211, 77, 0.2);
+  background: linear-gradient(135deg, #FED7AA 0%, #FDBA74 100%);
+  color: #92400E;
+  box-shadow: 0 1px 3px rgba(251, 146, 60, 0.2);
 }
 
 .confidence-low {
@@ -512,9 +512,9 @@
 }
 
 .item-charolas {
-  color: var(--warning-text);
+  color: #92400E;
   font-weight: 600;
-  background: linear-gradient(135deg, #FEF9C3 0%, #FDE68A 100%);
+  background: linear-gradient(135deg, #FED7AA 0%, #FDBA74 100%);
   padding: var(--spacing-xs) var(--spacing-sm);
   border-radius: var(--radius-sm);
   display: inline-block;

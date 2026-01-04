@@ -4,8 +4,8 @@
   --primary: #C7D2FE;
   --primary-dark: #A5B4FC;
   --primary-text: #312E81;
-  --secondary: #FCD34D;
-  --secondary-dark: #FBBF24;
+  --secondary: #FDBA74;
+  --secondary-dark: #FB923C;
 
   /* Estados - Paleta pastel */
   --success: #86EFAC;
@@ -14,8 +14,8 @@
   --error: #FCA5A5;
   --error-dark: #F87171;
   --error-text: #991B1B;
-  --warning: #FCD34D;
-  --warning-text: #CA8A04;
+  --warning: #FDBA74;
+  --warning-text: #92400E;
   --idle: #CBD5E1;
   --idle-text: #475569;
 

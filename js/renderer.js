@@ -118,7 +118,7 @@ class Renderer {
     const circumference = 2 * Math.PI * 70; // radio = 70
     const offset = circumference - (percentage / 100) * circumference;
 
-    const color = colorClass === 'primary' ? '#A5B4FC' : '#FCD34D';
+    const color = colorClass === 'primary' ? '#A5B4FC' : '#FDBA74';
 
     container.innerHTML = `
       <h3 class="progress-label">${label}</h3>
