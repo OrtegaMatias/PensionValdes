@@ -173,27 +173,47 @@
 
 /* Estimación */
 .estimation-content {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: var(--spacing-xl);
+}
+
+.estimation-primary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--spacing-lg);
+  padding-bottom: var(--spacing-xl);
+  border-bottom: 2px solid var(--bg-secondary);
+}
+
+.estimation-schedule {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
 }
 
 .estimation-item {
   text-align: center;
+  padding: var(--spacing-md);
 }
 
 .estimation-value {
-  font-size: 2rem;
+  font-size: 1.75rem;
   font-weight: 700;
   color: var(--primary-text);
   margin-bottom: var(--spacing-xs);
+  line-height: 1.2;
 }
 
 .estimation-label {
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  font-weight: 600;
 }
 
 .confidence-badge {

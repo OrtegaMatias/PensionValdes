@@ -65,9 +65,12 @@
   }
 
   /* Estimación */
-  .estimation-content {
+  .estimation-primary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .estimation-schedule {
     grid-template-columns: 1fr;
-    gap: var(--spacing-lg);
   }
 
   .estimation-value {

@@ -165,49 +165,53 @@ class Renderer {
         : `${Math.abs(schedule.daysDifference)} días después`;
 
       scheduleHtml = `
-        <div class="estimation-item">
-          <div class="estimation-value ${statusClass}">${statusLabel}</div>
-          <div class="estimation-label">Estado vs. Plazo</div>
-        </div>
-        <div class="estimation-item">
-          <div class="estimation-value">${Calculator.formatDate(schedule.targetDate)}</div>
-          <div class="estimation-label">Fecha Pactada</div>
-        </div>
-        <div class="estimation-item">
-          <div class="estimation-value ${statusClass}">${schedule.progressDifference > 0 ? '+' : ''}${schedule.progressDifference}%</div>
-          <div class="estimation-label">Diferencia de Progreso</div>
-        </div>
-        <div class="estimation-item">
-          <div class="estimation-value ${schedule.willFinishOnTime ? 'text-success' : 'text-error'}">${diffText}</div>
-          <div class="estimation-label">Vs. Plazo Pactado</div>
+        <div class="estimation-schedule">
+          <div class="estimation-item">
+            <div class="estimation-value ${statusClass}">${statusLabel}</div>
+            <div class="estimation-label">Estado vs. Plazo</div>
+          </div>
+          <div class="estimation-item">
+            <div class="estimation-value">${Calculator.formatDate(schedule.targetDate)}</div>
+            <div class="estimation-label">Fecha Pactada</div>
+          </div>
+          <div class="estimation-item">
+            <div class="estimation-value ${statusClass}">${schedule.progressDifference > 0 ? '+' : ''}${schedule.progressDifference}%</div>
+            <div class="estimation-label">Diferencia</div>
+          </div>
+          <div class="estimation-item">
+            <div class="estimation-value ${schedule.willFinishOnTime ? 'text-success' : 'text-error'}">${diffText}</div>
+            <div class="estimation-label">Desviación</div>
+          </div>
         </div>
       `;
     }
 
     container.innerHTML = `
       <div class="estimation-content">
-        <div class="estimation-item">
-          <div class="estimation-value">${Calculator.formatDuration(remaining.minutes)}</div>
-          <div class="estimation-label">Tiempo Restante</div>
-        </div>
-        <div class="estimation-item">
-          <div class="estimation-value">${estimation.daysNeeded}</div>
-          <div class="estimation-label">Días Estimados</div>
-        </div>
-        <div class="estimation-item">
-          <div class="estimation-value">${Calculator.formatDate(estimation.date)}</div>
-          <div class="estimation-label">Fecha Estimada</div>
-        </div>
-        <div class="estimation-item">
-          <div class="confidence-badge ${confidenceClass}">${confidenceLabel}</div>
-          <div class="estimation-label">Confianza</div>
+        <div class="estimation-primary">
+          <div class="estimation-item">
+            <div class="estimation-value">${Calculator.formatDuration(remaining.minutes)}</div>
+            <div class="estimation-label">Tiempo Restante</div>
+          </div>
+          <div class="estimation-item">
+            <div class="estimation-value">${estimation.daysNeeded}</div>
+            <div class="estimation-label">Días Necesarios</div>
+          </div>
+          <div class="estimation-item">
+            <div class="estimation-value">${Calculator.formatDate(estimation.date)}</div>
+            <div class="estimation-label">Fecha Estimada</div>
+          </div>
+          <div class="estimation-item">
+            <div class="confidence-badge ${confidenceClass}">${confidenceLabel}</div>
+            <div class="estimation-label">Confianza</div>
+          </div>
         </div>
         ${scheduleHtml}
       </div>
       <div class="estimation-disclaimer">
         Estimación basada en ${stats.completed} impresiones completadas.
         Considera ${this.calculator.workHoursPerDay}h de trabajo diarias.
-        ${schedule ? `<br>Progreso esperado: ${schedule.expectedTimeProgress}% vs. Progreso real: ${schedule.actualProgress}%` : ''}
+        ${schedule ? `Progreso esperado: ${schedule.expectedTimeProgress}% • Progreso real: ${schedule.actualProgress}%` : ''}
       </div>
     `;
   }
