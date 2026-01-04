@@ -161,14 +161,6 @@ class Renderer {
       return;
     }
 
-    const confidenceClass = `confidence-${estimation.confidence}`;
-    const confidenceLabel = {
-      high: 'Alta',
-      medium: 'Media',
-      low: 'Baja',
-      none: 'Sin datos'
-    }[estimation.confidence];
-
     let scheduleHtml = '';
     if (schedule) {
       const statusLabel = {
@@ -223,10 +215,6 @@ class Renderer {
           <div class="estimation-item">
             <div class="estimation-value">${Calculator.formatDate(estimation.date)}</div>
             <div class="estimation-label">Fecha Estimada</div>
-          </div>
-          <div class="estimation-item">
-            <div class="confidence-badge ${confidenceClass}">${confidenceLabel}</div>
-            <div class="estimation-label">Confianza</div>
           </div>
         </div>
         ${scheduleHtml}
